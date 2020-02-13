@@ -12,9 +12,31 @@ import random
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
 datafile_name = "first_iteration.hdf5"
+train_test_val = {"train":1/3, "test":1/3, "val":1/3}
+last = 13
+
 def make_hdf():
+	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("~/Desktop/aerogel_preprocess/blanks", train_test_val)
+	trainY = create_big_array_track(ty_codes)
+	print("done with TrainYes")
+	trainN = create_big_array_blank(tn_codes)
+	print("done with TrainNo")
+	testY = create_big_array_track(tey_codes)
+	print("done with TestYes")
+	testN = create_big_array_blank(ten_codes)
+	print("done with TestNo")
+	valY = create_big_array_track(vy_codes)
+	print("done with ValYes")
+	valN = create_big_array_blank(vn_codes)
+	print("done with ValNo")
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
-	datafile.create_dataset("TrainYes", )
+	datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
+	datafile.create_dataset("TrainNo", trainN.shape, data = trainN)
+	datafile.create_dataset("TestYes", testY.shape, data = testY)
+	datafile.create_dataset("TestNo", testN.shape, data = testN)
+	datafile.create_dataset("ValYes", valY.shape, data = valY)
+	datafile.create_dataset("ValNo", valN.shape, data = valN)
+	datafile.close()
 
 
 def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
@@ -59,5 +81,37 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
 	print(len(valNo))
 	print(length)
 	return trainYes, trainNo, testYes, testNo, valYes, valNo
-	
-split_codes(os.path.join(save_dir, "blanks"))
+
+
+def create_big_array_blank(code_list):
+	big_array = []
+	for path in code_list:
+		arr, surf = construct.load_and_getDelSq(path)
+		x = random.randint(-1, 3)
+		if surf + x + last > arr.size[0]:
+			arr = arr[-last]
+		else:
+			arr = arr[surf + x : surf + x + last]
+		big_array.append(arr)
+	return np.array(big_array)
+
+def create_big_array_track(code_list):
+	big_array = []
+	for path in code_list:
+		key = random.choice(list(construct.id_to_surface.keys()))
+		arr = construct.insert(key, path)[:-last]
+		big_array.append(arr)
+	return np.array(big_array)
+
+
+#split_codes(os.path.join(save_dir, "blanks"))
+make_hdf()
+
+
+
+
+
+
+
+
+

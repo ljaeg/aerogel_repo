@@ -12,7 +12,9 @@ from skimage.exposure import match_histograms, adjust_gamma
 #from_id = "fm_21850_13198.I1016_13apr10"
 from_id = "fm_-60712_-54519"
 to_id = "fm_16007_-49606"
-Dir = "/Users/loganjaeger/Desktop/aerogel/"
+#Dir = "/Users/loganjaeger/Desktop/aerogel/"
+Dir = "/home/admin/Desktop/aerogel_repo/"
+
 
 #First thing is to match up the surfaces
 #Note that we're 1-indexing the images, so watch for index mistakes
@@ -46,10 +48,10 @@ def assign_ij(difference):
 	elif difference < 0:
 		return 1, 1 - difference
 
-def insert(from_id, to_id):
+def insert(from_id, to_dir):
 	track, track_surface = load_and_getDelSq(Dir + "/track ims/TRACK-" + from_id)
 	track_surface = id_to_surface[from_id]
-	blank, blank_surface = load_and_getDelSq(Dir + "/blanks/" + to_id)
+	blank, blank_surface = load_and_getDelSq(to_dir)
 	mask_path = Dir + "/track ims/TRACK-" + from_id + "/mask.tif"
 	mask = np.array(Image.open(mask_path))
 	print(mask.shape)
@@ -82,7 +84,7 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 			i += 1
 		except IndexError:
 			break
-	return np.array(end[-13:])
+	return np.array(end)
 
 def augment(movie, mask):
 	#MOVIE is a 3d array that represents each slice of the movie stacked on top of each other
