@@ -18,7 +18,7 @@ def make_hdf():
 
 
 def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
-	names = os.walk(directory)
+	names = [t[0] for t in os.walk(directory)]
 	for n in names:
 		print(n)
 split_codes(os.path.join(save_dir, "blanks"))
