@@ -12,21 +12,30 @@ import os
 amazon_code = "fm_27707_-59216"
 Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + amazon_code
 
-frame = 1
-os.mkdir(Dir)
-while frame < 100:
-	print(frame)
-	if frame < 10:
-		fnumber = "0" + str(frame)
-	else:
-		fnumber = str(frame)
-	url = "http://s3.amazonaws.com/stardustathome.testbucket/real/{x}/{x}-0{y}.jpg".format(x = amazon_code, y = fnumber)
-	r = requests.get(url)
-	try:
-		img = Image.open(BytesIO(r.content))
-		img = np.array(img)
-	except OSError:
-		print("got error from URL")
-		break
-	plt.imsave(Dir + "/" + str(frame) + ".png", img)
-	frame += 1
+def make_one(amazon_code):
+	frame = 1
+	os.mkdir(Dir)
+	while frame < 100:
+		#print(frame)
+		if frame < 10:
+			fnumber = "0" + str(frame)
+		else:
+			fnumber = str(frame)
+		url = "http://s3.amazonaws.com/stardustathome.testbucket/real/{x}/{x}-0{y}.jpg".format(x = amazon_code, y = fnumber)
+		r = requests.get(url)
+		try:
+			img = Image.open(BytesIO(r.content))
+			img = np.array(img)
+		except OSError:
+			#print("got error from URL")
+			break
+		plt.imsave(Dir + "/" + str(frame) + ".png", img)
+		frame += 1
+
+def make_a_bunch(code_txt_file_path):
+	f = open(code_txt_file_path, "r")
+	for code in f.read().splitlines():
+		make_one(code)
+
+
+make_a_bunch()
