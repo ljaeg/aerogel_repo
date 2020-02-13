@@ -9,7 +9,16 @@ from scipy.ndimage.filters import laplace
 import random
 from skimage.exposure import match_histograms
 
-def make():
+
+save_dir = "/home/admin/Desktop/aerogel_preprocess"
+datafile_name = "first_iteration.hdf5"
+def make_hdf():
+	datafile = h5py.File(os.join(save_dir, datafile_name), "w")
+	datafile.create_dataset("TrainYes", )
 
 
-def 
+def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
+	names = os.walk(directory)
+	for n in names:
+		print(n)
+split_codes(os.join(save_dir, "blanks"))
