@@ -9,11 +9,14 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import os
 
-amazon_code = "fm_27707_-59216"
-Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + amazon_code
+#amazon_code = "fm_27707_-59216"
+#Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + amazon_code
+Dir = "/home/admin/Desktop/aerogel_preprocess/"
+txt_path_file = "/home/admin/Desktop/aerogel_repo/aerogel_codes.txt"
 
 def make_one(amazon_code):
 	frame = 1
+	direc = Dir + amazon_code
 	os.mkdir(Dir)
 	while frame < 100:
 		#print(frame)
@@ -34,8 +37,12 @@ def make_one(amazon_code):
 
 def make_a_bunch(code_txt_file_path):
 	f = open(code_txt_file_path, "r")
+	number = 0
 	for code in f.read().splitlines():
 		make_one(code)
+		number += 1
+		if not number % 100:
+			print(number + "/20,000")
 
 
-make_a_bunch()
+make_a_bunch(txt_path_file)
