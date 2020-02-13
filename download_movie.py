@@ -11,7 +11,7 @@ import os
 
 #amazon_code = "fm_27707_-59216"
 #Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + amazon_code
-Dir = "/home/admin/Desktop/aerogel_preprocess/"
+Dir = "/home/admin/Desktop/aerogel_preprocess/blanks/"
 txt_path_file = "/home/admin/Desktop/aerogel_repo/aerogel_codes.txt"
 
 def make_one(amazon_code):
