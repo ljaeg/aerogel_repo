@@ -18,7 +18,46 @@ def make_hdf():
 
 
 def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
-	names = [t[0] for t in os.walk(directory)]
-	for n in names:
-		print(n)
+	names = [t[0] for t in os.walk(directory)][1:]
+	trainYes = []
+	trainNo = []
+	testYes = []
+	testNo = []
+	valYes = []
+	valNo = []
+	length = len(names)
+	i = 0
+	k = length * ttv_split["train"] * .5
+	while i < k:
+		trainYes.append(names[i])
+		i += 1
+	k = k * 2
+	while i < k:
+		trainNo.append(names[i])
+		i += 1
+	k += length * ttv_split["test"] * .5
+	while i < k:
+		testYes.append(names[i])
+		i += 1
+	k += length * ttv_split['test'] * .5
+	while i < k:
+		testNo.append(names[i])
+		i += 1
+	k += length * ttv_split['val'] * .5
+	while i < k:
+		valYes.append(names[i])
+		i += 1
+	k = length
+	while i < k:
+		valNo.append(names[i])
+		i += 1
+	print(len(trainYes))
+	print(len(trainNo))
+	print(len(testYes))
+	print(len(testNo))
+	print(len(valYes))
+	print(len(valNo))
+	print(length)
+	return trainYes, trainNo, testYes, testNo, valYes, valNo
+	
 split_codes(os.path.join(save_dir, "blanks"))
