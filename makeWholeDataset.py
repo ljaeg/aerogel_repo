@@ -1,4 +1,4 @@
-import construct
+#import construct
 import h5py
 import numpy as np 
 import matplotlib.pyplot as plt 
@@ -7,7 +7,7 @@ from PIL import Image
 from keras.preprocessing.image import ImageDataGenerator
 from scipy.ndimage.filters import laplace
 import random
-from skimage.exposure import match_histograms
+#from skimage.exposure import match_histograms
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
