@@ -17,7 +17,10 @@ txt_path_file = "/home/admin/Desktop/aerogel_repo/aerogel_codes.txt"
 def make_one(amazon_code):
 	frame = 1
 	direc = Dir + amazon_code
-	os.mkdir(direc)
+	if os.path.isdir(direc):
+		return
+	else:
+		os.mkdir(direc)
 	while frame < 100:
 		#print(frame)
 		if frame < 10:
