@@ -17,7 +17,7 @@ txt_path_file = "/home/admin/Desktop/aerogel_repo/aerogel_codes.txt"
 def make_one(amazon_code):
 	frame = 1
 	direc = Dir + amazon_code
-	os.mkdir(Dir)
+	os.mkdir(direc)
 	while frame < 100:
 		#print(frame)
 		if frame < 10:
@@ -32,7 +32,7 @@ def make_one(amazon_code):
 		except OSError:
 			#print("got error from URL")
 			break
-		plt.imsave(Dir + "/" + str(frame) + ".png", img)
+		plt.imsave(direc + "/" + str(frame) + ".png", img)
 		frame += 1
 
 def make_a_bunch(code_txt_file_path):
