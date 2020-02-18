@@ -28,26 +28,31 @@ def make_hdf():
 	trainN = create_big_array_blank(tn_codes)
 	datafile.create_dataset("TrainNo", trainN.shape, data = trainN)
 	datafile.flush()
+	trainN = 0
 	print("done with TrainNo")
 
 	testY = create_big_array_track(tey_codes)
 	datafile.create_dataset("TestYes", testY.shape, data = testY)
 	datafile.flush()
+	testY = 0
 	print("done with TestYes")
 
 	testN = create_big_array_blank(ten_codes)
 	datafile.create_dataset("TestNo", testN.shape, data = testN)
 	datafile.flush()
+	testN = 0
 	print("done with TestNo")
 
 	valY = create_big_array_track(vy_codes)
 	datafile.create_dataset("ValYes", valY.shape, data = valY)
 	datafile.flush()
+	valY = 0
 	print("done with ValYes")
 
 	valN = create_big_array_blank(vn_codes)
 	datafile.create_dataset("ValNo", valN.shape, data = valN)
 	datafile.flush()
+	valN = 0
 	print("done with ValNo")
 
 	datafile.close()
@@ -114,7 +119,9 @@ def create_big_array_track(code_list):
 	for path in code_list:
 		key = random.choice(list(construct.id_to_surface.keys()))
 		arr = construct.insert(key, path)[-last:]
-		#print("shape: ", arr.shape)
+		if arr.shape[0] != last:
+			print(arr.shape)
+			continue
 		big_array.append(arr)
 	return np.array(big_array)
 
