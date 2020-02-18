@@ -31,7 +31,7 @@ for j in [0, 1, 2]:
 	while True:
 		try:
 			im_slice = TrainYes[yes_inds[j], i, :, :, :]
-			print(im_slice.dtype)
+			#print(im_slice.dtype)
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "yes" + str(j), str(i) + ".png"))
 			i += 1
@@ -52,8 +52,8 @@ for j in [0, 1, 2]:
 	i = 0
 	while True:
 		try:
-			im_slice = TrainNo[yes_inds[j], i, :, :, :].astype("uint8")
-			print("no: ", im_slice.dtype)
+			im_slice = (TrainNo[yes_inds[j], i, :, :, :] * 255).astype("uint8")
+			#print("no: ", im_slice.dtype)
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "no" + str(j), str(i) + ".png"))
 			i += 1

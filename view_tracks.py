@@ -62,7 +62,7 @@ def load_in_ims(code):
 		#path = "/Users/loganjaeger/Desktop/aerogel/blanks/" + code + "/" + str(frame) + ".png"
 		#path = "/Users/loganjaeger/Desktop/aerogel/const/seventh/" + str(frame) + ".png"
 		#path = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + code + "/" + str(frame) + ".png"
-		path = "/Users/loganjaeger/Desktop/aerogel/fromHDF/no1/" + str(frame) + ".png"
+		path = "/Users/loganjaeger/Desktop/aerogel/fromHDF/no2/" + str(frame) + ".png"
 		try:
 			img = plt.imread(path)
 			#print(img.shape)

@@ -115,7 +115,7 @@ def create_big_array_blank(code_list):
 			print(arr.shape)
 			continue
 		big_array.append(arr)
-	return np.array(big_array)
+	return (np.array(big_array) * 255).astype("uint8")
 
 def create_big_array_track(code_list):
 	big_array = []
