@@ -53,7 +53,7 @@ for j in [0, 1, 2]:
 	while True:
 		try:
 			im_slice = TrainNo[yes_inds[j], i, :, :, :]
-			print("no: ", im.shape)
+			print("no: ", im_slice.shape)
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "no" + str(j), str(i) + ".png"))
 			i += 1
