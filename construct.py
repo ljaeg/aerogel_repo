@@ -54,8 +54,8 @@ def insert(from_id, to_dir):
 	blank, blank_surface = load_and_getDelSq(to_dir)
 	mask_path = Dir + "/track ims/TRACK-" + from_id + "/mask.tif"
 	mask = np.array(Image.open(mask_path))
-	print(mask.shape)
-	print(track.shape)
+	# print(mask.shape)
+	# print(track.shape)
 	track, mask = augment(track, mask)
 	dif = track_surface - blank_surface
 	i, j = assign_ij(dif)
