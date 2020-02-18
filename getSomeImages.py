@@ -28,7 +28,7 @@ for j in [0, 1, 2]:
 	while True:
 		try:
 			im_slice = TrainYes[yes_inds[j], i, :, :, :]
-			im = Image.from_array(im_slice)
+			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "yes" + str(j), str(i) + ".png"))
 			i += 1
 		except IndexError:
@@ -48,7 +48,7 @@ for j in [0, 1, 2]:
 	while True:
 		try:
 			im_slice = TrainYes[yes_inds[j], i, :, :, :]
-			im = Image.from_array(im_slice)
+			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "no" + str(j), str(i) + ".png"))
 			i += 1
 		except IndexError:
