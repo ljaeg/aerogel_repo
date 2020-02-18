@@ -20,6 +20,7 @@ def make_hdf():
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
 	trainY = create_big_array_track(ty_codes)
+	print(trainY.shape)
 	trainY = trainY.astype("f")
 	datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
 	datafile.flush()
