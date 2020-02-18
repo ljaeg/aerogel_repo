@@ -17,25 +17,38 @@ last = 13
 
 def make_hdf():
 	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", train_test_val)
-	trainY = create_big_array_track(ty_codes)
-	print("done with TrainYes")
-	trainN = create_big_array_blank(tn_codes)
-	print("done with TrainNo")
-	testY = create_big_array_track(tey_codes)
-	print("done with TestYes")
-	testN = create_big_array_blank(ten_codes)
-	print("done with TestNo")
-	valY = create_big_array_track(vy_codes)
-	print("done with ValYes")
-	valN = create_big_array_blank(vn_codes)
-	print("done with ValNo")
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
+
+	trainY = create_big_array_track(ty_codes)
 	datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
+	datafile.flush()
+	print("done with TrainYes")
+
+	trainN = create_big_array_blank(tn_codes)
 	datafile.create_dataset("TrainNo", trainN.shape, data = trainN)
+	datafile.flush()
+	print("done with TrainNo")
+
+	testY = create_big_array_track(tey_codes)
 	datafile.create_dataset("TestYes", testY.shape, data = testY)
+	datafile.flush()
+	print("done with TestYes")
+
+	testN = create_big_array_blank(ten_codes)
 	datafile.create_dataset("TestNo", testN.shape, data = testN)
+	datafile.flush()
+	print("done with TestNo")
+
+	valY = create_big_array_track(vy_codes)
 	datafile.create_dataset("ValYes", valY.shape, data = valY)
+	datafile.flush()
+	print("done with ValYes")
+
+	valN = create_big_array_blank(vn_codes)
 	datafile.create_dataset("ValNo", valN.shape, data = valN)
+	datafile.flush()
+	print("done with ValNo")
+
 	datafile.close()
 
 
