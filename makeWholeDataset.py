@@ -88,7 +88,7 @@ def create_big_array_blank(code_list):
 	for path in code_list:
 		arr, surf = construct.load_and_getDelSq(path)
 		x = random.randint(-1, 3)
-		if surf + x + last > arr.size[0]:
+		if surf + x + last > arr.shape[0]:
 			arr = arr[-last]
 		else:
 			arr = arr[surf + x : surf + x + last]
