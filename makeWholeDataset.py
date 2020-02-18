@@ -104,7 +104,7 @@ def create_big_array_blank(code_list):
 		arr, surf = construct.load_and_getDelSq(path)
 		x = random.randint(-1, 3)
 		if surf + x + last > arr.shape[0]:
-			arr = arr[-last]
+			arr = arr[-last:]
 		else:
 			arr = arr[surf + x : surf + x + last]
 		big_array.append(arr)
@@ -114,7 +114,7 @@ def create_big_array_track(code_list):
 	big_array = []
 	for path in code_list:
 		key = random.choice(list(construct.id_to_surface.keys()))
-		arr = construct.insert(key, path)[:-5]
+		arr = construct.insert(key, path)[-last:]
 		print("shape: ", arr.shape)
 		big_array.append(arr)
 	return np.array(big_array)
