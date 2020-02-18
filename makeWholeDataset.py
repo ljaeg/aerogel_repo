@@ -16,7 +16,7 @@ train_test_val = {"train":1/3, "test":1/3, "val":1/3}
 last = 13
 
 def make_hdf():
-	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("~/Desktop/aerogel_preprocess/blanks", train_test_val)
+	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", train_test_val)
 	trainY = create_big_array_track(ty_codes)
 	print("done with TrainYes")
 	trainN = create_big_array_blank(tn_codes)
