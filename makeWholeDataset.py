@@ -11,7 +11,7 @@ import random
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "first_iteration.hdf5"
+datafile_name = "second_iteration.hdf5"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
 last = 13
 
