@@ -22,6 +22,7 @@ def make_hdf():
 	trainY = create_big_array_track(ty_codes)
 	datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
 	datafile.flush()
+	trainY = 0
 	print("done with TrainYes")
 
 	trainN = create_big_array_blank(tn_codes)
