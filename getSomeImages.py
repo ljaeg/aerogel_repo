@@ -15,7 +15,7 @@ TrainNo = DF["TrainNo"]
 if not os.path.exists(SaveDir):
 	os.mkdir(SaveDir)
 
-for_seed = 138
+for_seed = 139
 np.random.seed(for_seed)
 
 numIms1 = TrainYes.shape[0]
