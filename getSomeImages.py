@@ -15,7 +15,7 @@ TrainNo = DF["TrainNo"]
 if not os.path.exists(SaveDir):
 	os.mkdir(SaveDir)
 
-for_seed = 139
+for_seed = 137
 np.random.seed(for_seed)
 
 numIms1 = TrainYes.shape[0]
@@ -51,7 +51,7 @@ for j in [0, 1, 2]:
 	i = 0
 	while True:
 		try:
-			im_slice = TrainYes[yes_inds[j], i, :, :, :]
+			im_slice = TrainNo[yes_inds[j], i, :, :, :]
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "no" + str(j), str(i) + ".png"))
 			i += 1
