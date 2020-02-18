@@ -78,7 +78,7 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 			if save:
 				b_slice.save("/Users/loganjaeger/Desktop/aerogel/const/seventh/" + str(i) + ".png")
 			else:
-				end.append(b_slice)
+				end.append(np.array(b_slice))
 			blank_index += 1
 			track_index += 1
 			i += 1
