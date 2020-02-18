@@ -25,7 +25,8 @@ yes_inds = np.random.random_integers(0, high = numIms1, size = 3)
 no_inds = np.random.random_integers(0, high = numIms2, size = 3)
 
 for j in [0, 1, 2]:
-	os.mkdir(os.path.join(SaveDir, "yes" + str(j)))
+	if not os.path.exists(os.path.join(SaveDir, "yes" + str(j))):
+		os.mkdir(os.path.join(SaveDir, "yes" + str(j)))
 	i = 0
 	while True:
 		try:
@@ -45,7 +46,8 @@ for j in [0, 1, 2]:
 			break
 
 for j in [0, 1, 2]:
-	os.mkdir(os.path.join(SaveDir, "no" + str(j)))
+	if not os.path.exists(os.path.join(SaveDir, "no" + str(j))):
+		os.mkdir(os.path.join(SaveDir, "no" + str(j)))
 	i = 0
 	while True:
 		try:
