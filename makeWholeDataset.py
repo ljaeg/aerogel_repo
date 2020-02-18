@@ -111,6 +111,9 @@ def create_big_array_blank(code_list):
 			arr = arr[-last:]
 		else:
 			arr = arr[surf + x : surf + x + last]
+		if arr.shape[0] != last:
+			print(arr.shape)
+			continue
 		big_array.append(arr)
 	return np.array(big_array)
 
