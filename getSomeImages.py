@@ -11,7 +11,9 @@ SaveDir = "/home/admin/Desktop/aerogel_repo/fromHDF"
 DF = h5py.File(os.path.join(Dir, datafile_name), "r")
 TrainYes = DF["TrainYes"]
 TrainNo = DF["TrainNo"]
-os.mkdir(SaveDir)
+
+if not os.path.exists(SaveDir):
+	os.mkdir(SaveDir)
 
 for_seed = 139
 np.random.seed(for_seed)
