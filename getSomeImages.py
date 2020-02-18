@@ -8,7 +8,7 @@ Dir = "/home/admin/Desktop/aerogel_preprocess"
 datafile_name = "first_iteration.hdf5"
 SaveDir = "/home/admin/Desktop/aerogel_repo/fromHDF"
 
-DF = h5py.File(os.path.join(save_dir, datafile_name), "r")
+DF = h5py.File(os.path.join(SaveDir, datafile_name), "r")
 TrainYes = DF["TrainYes"]
 TrainNo = DF["TrainNo"]
 
