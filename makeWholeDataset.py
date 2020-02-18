@@ -20,17 +20,17 @@ def make_hdf():
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
 	create(datafile, ty_codes, "TrainYes")
-	print("TrainYes")
+	print("Done with TrainYes")
 	create(datafile, tn_codes, "TrainNo")
-	print("TrainNo")
+	print("Done with TrainNo")
 	create(datafile, tey_codes, "TestYes")
-	print("TestYes")
+	print("Done with TestYes")
 	create(datafile, ten_codes, "TestNo")
-	print("TestNo")
+	print("Done with TestNo")
 	create(datafile, vy_codes, "ValYes")
-	print("ValYes")
+	print("Done with ValYes")
 	create(datafile, vn_codes, "ValNo")
-	print("ValNo")
+	print("Done with ValNo")
 	# trainY = create_big_array_track(ty_codes)
 	# datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
 	# datafile.flush()
@@ -138,7 +138,10 @@ def create_big_array_track(code_list):
 	big_array = []
 	for path in code_list:
 		key = random.choice(list(construct.id_to_surface.keys()))
-		arr = construct.insert(key, path)[-last:]
+		try:
+			arr = construct.insert(key, path)[-last:]
+		except OSError:
+			continue
 		if arr.shape[0] != last:
 			print(arr.shape)
 			continue
