@@ -19,43 +19,60 @@ def make_hdf():
 	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", train_test_val)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
-	trainY = create_big_array_track(ty_codes)
-	datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
-	datafile.flush()
-	trainY = 0
-	print("done with TrainYes")
+	create(datafile, ty_codes, "TrainYes")
+	print("TrainYes")
+	create(datafile, tn_codes, "TrainNo")
+	print("TrainNo")
+	create(datafile, tey_codes, "TestYes")
+	print("TestYes")
+	create(datafile, ten_codes, "TestNo")
+	print("TestNo")
+	create(datafile, vy_codes, "ValYes")
+	print("ValYes")
+	create(datafile, vn_codes, "ValNo")
+	print("ValNo")
+	# trainY = create_big_array_track(ty_codes)
+	# datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
+	# datafile.flush()
+	# trainY = 0
+	# print("done with TrainYes")
 
-	trainN = create_big_array_blank(tn_codes)
-	datafile.create_dataset("TrainNo", trainN.shape, data = trainN)
-	datafile.flush()
-	trainN = 0
-	print("done with TrainNo")
+	# trainN = create_big_array_blank(tn_codes)
+	# datafile.create_dataset("TrainNo", trainN.shape, data = trainN)
+	# datafile.flush()
+	# trainN = 0
+	# print("done with TrainNo")
 
-	testY = create_big_array_track(tey_codes)
-	datafile.create_dataset("TestYes", testY.shape, data = testY)
-	datafile.flush()
-	testY = 0
-	print("done with TestYes")
+	# testY = create_big_array_track(tey_codes)
+	# datafile.create_dataset("TestYes", testY.shape, data = testY)
+	# datafile.flush()
+	# testY = 0
+	# print("done with TestYes")
 
-	testN = create_big_array_blank(ten_codes)
-	datafile.create_dataset("TestNo", testN.shape, data = testN)
-	datafile.flush()
-	testN = 0
-	print("done with TestNo")
+	# testN = create_big_array_blank(ten_codes)
+	# datafile.create_dataset("TestNo", testN.shape, data = testN)
+	# datafile.flush()
+	# testN = 0
+	# print("done with TestNo")
 
-	valY = create_big_array_track(vy_codes)
-	datafile.create_dataset("ValYes", valY.shape, data = valY)
-	datafile.flush()
-	valY = 0
-	print("done with ValYes")
+	# valY = create_big_array_track(vy_codes)
+	# datafile.create_dataset("ValYes", valY.shape, data = valY)
+	# datafile.flush()
+	# valY = 0
+	# print("done with ValYes")
 
-	valN = create_big_array_blank(vn_codes)
-	datafile.create_dataset("ValNo", valN.shape, data = valN)
-	datafile.flush()
-	valN = 0
-	print("done with ValNo")
+	# valN = create_big_array_blank(vn_codes)
+	# datafile.create_dataset("ValNo", valN.shape, data = valN)
+	# datafile.flush()
+	# valN = 0
+	# print("done with ValNo")
 
 	datafile.close()
+
+def create(datafile, codes, name):
+	arr = create_big_array_track(codes)
+	datafile.create_dataset(name, arr.shape, data = arr)
+	datafile.flush()
 
 
 def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
@@ -92,12 +109,12 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
 	while i < k:
 		valNo.append(names[i])
 		i += 1
-	print(len(trainYes))
-	print(len(trainNo))
-	print(len(testYes))
-	print(len(testNo))
-	print(len(valYes))
-	print(len(valNo))
+	print("TrainYes: ", len(trainYes))
+	print("TrainNo: ", len(trainNo))
+	print("TestYes: ", len(testYes))
+	print("TestNo: ", len(testNo))
+	print("ValYes: ", len(valYes))
+	print("ValNo: ", len(valNo))
 	print(length)
 	return trainYes, trainNo, testYes, testNo, valYes, valNo
 
