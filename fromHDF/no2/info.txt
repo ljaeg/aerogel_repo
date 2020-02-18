@@ -1,0 +1,6 @@
+j=2
+no index: 69
+seed: 139
+Dir: /home/admin/Desktop/aerogel_preprocess
+datafile_name: first_iteration.hdf5
+SaveDir: /home/admin/Desktop/aerogel_repo/fromHDF
