@@ -21,8 +21,8 @@ np.random.seed(for_seed)
 numIms1 = TrainYes.shape[0]
 numIms2 = TrainNo.shape[0]
 
-yes_inds = np.random.random_integers(0, high = numIms1, size = 3)
-no_inds = np.random.random_integers(0, high = numIms2, size = 3)
+yes_inds = np.random.randint(0, high = numIms1, size = 3)
+no_inds = np.random.randint(0, high = numIms2, size = 3)
 
 for j in [0, 1, 2]:
 	if not os.path.exists(os.path.join(SaveDir, "yes" + str(j))):
@@ -34,7 +34,7 @@ for j in [0, 1, 2]:
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "yes" + str(j), str(i) + ".png"))
 			i += 1
-		except IndexError:
+		except ValueError:
 			f = open(os.path.join(SaveDir, "yes" + str(j), "info.txt"), "w")
 			f.write("j=" + str(j) + "\n")
 			f.write("yes index: " + str(yes_inds[j]) + "\n")
@@ -55,7 +55,7 @@ for j in [0, 1, 2]:
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "no" + str(j), str(i) + ".png"))
 			i += 1
-		except IndexError:
+		except ValueError:
 			f = open(os.path.join(SaveDir, "no" + str(j), "info.txt"), "w")
 			f.write("j=" + str(j) + "\n")
 			f.write("no index: " + str(no_inds[j]) + "\n")
