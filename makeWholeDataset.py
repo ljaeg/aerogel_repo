@@ -114,7 +114,7 @@ def create_big_array_track(code_list):
 	big_array = []
 	for path in code_list:
 		key = random.choice(list(construct.id_to_surface.keys()))
-		arr = construct.insert(key, path)[:-last]
+		arr = construct.insert(key, path)[:-5]
 		print("shape: ", arr.shape)
 		big_array.append(arr)
 	return np.array(big_array)
