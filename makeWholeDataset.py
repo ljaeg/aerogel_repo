@@ -19,7 +19,8 @@ def make_hdf():
 	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", train_test_val)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
-	trainY = create_big_array_track(ty_codes).astype("f")
+	trainY = create_big_array_track(ty_codes)
+	trainY = trainY.astype("f")
 	datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
 	datafile.flush()
 	print("done with TrainYes")
