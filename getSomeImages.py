@@ -26,7 +26,7 @@ yes_inds = np.random.randint(0, high = numIms1, size = num_ims)
 no_inds = np.random.randint(0, high = numIms2, size = num_ims)
 
 print("If you don't input a datafile name, we will use the file {}".format(datafile_name))
-new_file_name = input("What file name?")
+new_file_name = input("What file name? ")
 if new_file_name != "":
 	datafile_name = new_file_name
 print("Using {}".format(datafile_name))
@@ -37,6 +37,7 @@ for j in range(num_ims):
 	i = 0
 	while True:
 		try:
+			print(yes_inds[j])
 			im_slice = TrainYes[yes_inds[j], i, :, :, :]
 			#print(im_slice.dtype)
 			im = Image.fromarray(im_slice)
@@ -59,7 +60,8 @@ for j in range(num_ims):
 	i = 0
 	while True:
 		try:
-			im_slice = (TrainNo[yes_inds[j], i, :, :, :] * 255).astype("uint8")
+			print(no_inds[j])
+			im_slice = TrainNo[no_inds[j], i, :, :, :]
 			#print("no: ", im_slice.dtype)
 			im = Image.fromarray(im_slice)
 			im.save(os.path.join(SaveDir, "no" + str(j), str(i) + ".png"))
