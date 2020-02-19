@@ -27,8 +27,9 @@ no_inds = np.random.randint(0, high = numIms2, size = num_ims)
 
 print("If you don't input a datafile name, we will use the file {}".format(datafile_name))
 new_file_name = input("What file name?")
-if new_file_name != datafile_name:
+if new_file_name != "":
 	datafile_name = new_file_name
+print("Using {}".format(datafile_name))
 
 for j in range(num_ims):
 	if not os.path.exists(os.path.join(SaveDir, "yes" + str(j))):
