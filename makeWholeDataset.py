@@ -19,61 +19,30 @@ def make_hdf():
 	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", train_test_val)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
-	create(datafile, ty_codes, "TrainYes")
+	create_t(datafile, ty_codes, "TrainYes")
 	print("Done with TrainYes")
-	create(datafile, tn_codes, "TrainNo")
+	create_b(datafile, tn_codes, "TrainNo")
 	print("Done with TrainNo")
-	create(datafile, tey_codes, "TestYes")
+	create_t(datafile, tey_codes, "TestYes")
 	print("Done with TestYes")
-	create(datafile, ten_codes, "TestNo")
+	create_b(datafile, ten_codes, "TestNo")
 	print("Done with TestNo")
-	create(datafile, vy_codes, "ValYes")
+	create_t(datafile, vy_codes, "ValYes")
 	print("Done with ValYes")
-	create(datafile, vn_codes, "ValNo")
+	create_b(datafile, vn_codes, "ValNo")
 	print("Done with ValNo")
-	# trainY = create_big_array_track(ty_codes)
-	# datafile.create_dataset("TrainYes", trainY.shape, data = trainY)
-	# datafile.flush()
-	# trainY = 0
-	# print("done with TrainYes")
-
-	# trainN = create_big_array_blank(tn_codes)
-	# datafile.create_dataset("TrainNo", trainN.shape, data = trainN)
-	# datafile.flush()
-	# trainN = 0
-	# print("done with TrainNo")
-
-	# testY = create_big_array_track(tey_codes)
-	# datafile.create_dataset("TestYes", testY.shape, data = testY)
-	# datafile.flush()
-	# testY = 0
-	# print("done with TestYes")
-
-	# testN = create_big_array_blank(ten_codes)
-	# datafile.create_dataset("TestNo", testN.shape, data = testN)
-	# datafile.flush()
-	# testN = 0
-	# print("done with TestNo")
-
-	# valY = create_big_array_track(vy_codes)
-	# datafile.create_dataset("ValYes", valY.shape, data = valY)
-	# datafile.flush()
-	# valY = 0
-	# print("done with ValYes")
-
-	# valN = create_big_array_blank(vn_codes)
-	# datafile.create_dataset("ValNo", valN.shape, data = valN)
-	# datafile.flush()
-	# valN = 0
-	# print("done with ValNo")
 
 	datafile.close()
 
-def create(datafile, codes, name):
+def create_t(datafile, codes, name):
 	arr = create_big_array_track(codes)
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
+def create_b(datafile, codes, name):
+	arr = create_big_array_blank(codes)
+	datafile.create_dataset(name, arr.shape, data = arr)
+	datafile.flush()
 
 def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
 	names = [t[0] for t in os.walk(directory)][1:]
@@ -134,6 +103,7 @@ def create_big_array_blank(code_list):
 			arr = construct.insert_blank_mask(key, path)[-last:]
 		else:
 			arr, surf = construct.load_and_getDelSq(path)
+			arr = (arr * 255).astype("uint8")
 			x = random.randint(-1, 3)
 			if surf + x + last > arr.shape[0]:
 				arr = arr[-last:]
@@ -144,7 +114,7 @@ def create_big_array_blank(code_list):
 				print(arr.shape)
 				continue
 		big_array.append(arr)
-	return (np.array(big_array) * 255).astype("uint8")
+	return np.array(big_array)
 
 def create_big_array_track(code_list):
 	big_array = []
