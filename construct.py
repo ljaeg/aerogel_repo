@@ -8,6 +8,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from scipy.ndimage.filters import laplace
 import random
 from skimage.exposure import match_histograms, adjust_gamma
+import testSurfaceFinders
 
 #from_id = "fm_21850_13198.I1016_13apr10"
 from_id = "fm_-60712_-54519"
@@ -48,6 +49,13 @@ def assign_ij(difference):
 	elif difference < 0:
 		return 1, 1 - difference
 
+def get_subimages(big_arr, mask_shape):
+	bas = big_arr.shape
+	x = np.random.randint(0, high = bas[1] - mask_shape[0])
+	y = np.random.randint(0, high = bas[2] - mask_shape[1])
+	return big_arr[:, x:x+mask_shape[0], y:y+mask_shape[1], :]
+
+
 def insert(from_id, to_dir):
 	track, track_surface = load_and_getDelSq(Dir + "/track ims/TRACK-" + from_id)
 	track_surface = id_to_surface[from_id]
@@ -60,6 +68,24 @@ def insert(from_id, to_dir):
 	dif = track_surface - blank_surface
 	i, j = assign_ij(dif)
 	return paste_save(track, mask, blank, track_index = i, blank_index = j)
+
+
+def insert_blank_mask(mask_id, to_dir):
+	#Note I'm using "blank" here where track would normally go, and "background" where blank might go
+	mask_path = Dir + "/track ims/TRACK-" + mask_id + "/mask.tif"
+	mask = np.array(Image.open(mask_path))
+	key_blank = random.choice(list(testSurfaceFinders.d.keys()))
+	blank_surface = testSurfaceFinders.d[key_blank]
+	blank, __ = load_and_getDelSq(Dir + "forTestingSurface/" + key_blank)
+	small_blank = get_subimages(blank, mask.shape)
+	small_blank, mask = augment(small_blank, mask)
+	background, background_sur = load_and_getDelSq(to_dir)
+	dif = blank_surface - background_sur
+	i, j = assign_ij(dif)
+	return paste_save(small_blank, mask, background, track_index = i, blank_index = j)
+
+
+	
 
 def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False):
 	x_pos = random.randint(50, 450)

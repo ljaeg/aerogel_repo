@@ -135,7 +135,7 @@ def do():
 	print("mse for ds_ss_max: {}".format(ds_ss_max))
 	print("mse for ds_ss_min: {}".format(ds_ss_min))
 
-do()
+#do()
 
 
 

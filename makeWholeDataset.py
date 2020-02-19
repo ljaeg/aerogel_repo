@@ -11,7 +11,7 @@ import random
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "second_iteration.hdf5"
+datafile_name = "with_blank_masks.hdf5"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
 last = 13
 
@@ -128,15 +128,21 @@ def create_big_array_blank(code_list):
 	"""
 	big_array = []
 	for path in code_list:
-		arr, surf = construct.load_and_getDelSq(path)
-		x = random.randint(-1, 3)
-		if surf + x + last > arr.shape[0]:
-			arr = arr[-last:]
+		insert_mask = np.random.choice([0, 1], 1, p = [.7, .3])
+		if insert_mask:
+			key = random.choice(list(construct.id_to_surface.keys()))
+			arr = construct.insert_blank_mask(key, path)[-last:]
 		else:
-			arr = arr[surf + x : surf + x + last]
-		if arr.shape[0] != last:
-			print(arr.shape)
-			continue
+			arr, surf = construct.load_and_getDelSq(path)
+			x = random.randint(-1, 3)
+			if surf + x + last > arr.shape[0]:
+				arr = arr[-last:]
+			else:
+				arr = arr[surf + x : surf + x + last]
+
+			if arr.shape[0] != last:
+				print(arr.shape)
+				continue
 		big_array.append(arr)
 	return (np.array(big_array) * 255).astype("uint8")
 
