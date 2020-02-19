@@ -15,7 +15,7 @@ TrainNo = DF["TrainNo"]
 if not os.path.exists(SaveDir):
 	os.mkdir(SaveDir)
 
-for_seed = 139
+for_seed = 4673
 np.random.seed(for_seed)
 
 numIms1 = TrainYes.shape[0]
@@ -24,7 +24,7 @@ numIms2 = TrainNo.shape[0]
 yes_inds = np.random.randint(0, high = numIms1, size = 3)
 no_inds = np.random.randint(0, high = numIms2, size = 3)
 
-for j in [0, 1, 2]:
+for j in range(8):
 	if not os.path.exists(os.path.join(SaveDir, "yes" + str(j))):
 		os.mkdir(os.path.join(SaveDir, "yes" + str(j)))
 	i = 0
@@ -46,7 +46,7 @@ for j in [0, 1, 2]:
 			f.close()
 			break
 
-for j in [0, 1, 2]:
+for j in range(8):
 	if not os.path.exists(os.path.join(SaveDir, "no" + str(j))):
 		os.mkdir(os.path.join(SaveDir, "no" + str(j)))
 	i = 0
