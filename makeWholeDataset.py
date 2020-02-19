@@ -11,12 +11,13 @@ import random
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "with_blank_masks.hdf5"
+datafile_name = "testing.hdf5"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
+max_per = 50
 last = 13
 
 def make_hdf():
-	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", train_test_val)
+	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", ttv_split = train_test_val, max_per = max_per)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
 	create_t(datafile, ty_codes, "TrainYes")
@@ -44,7 +45,7 @@ def create_b(datafile, codes, name):
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
-def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
+def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max_per = None):
 	names = [t[0] for t in os.walk(directory)][1:]
 	trainYes = []
 	trainNo = []
@@ -85,7 +86,10 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
 	print("ValYes: ", len(valYes))
 	print("ValNo: ", len(valNo))
 	print(length)
-	return trainYes, trainNo, testYes, testNo, valYes, valNo
+	if max_per:
+		return trainYes[:max_per], trainNo[:max_per], testYes[:max_per], testNo[:max_per], valYes[:max_per], valNo[:max_per]
+	else:
+		return trainYes, trainNo, testYes, testNo, valYes, valNo
 
 
 def create_big_array_blank(code_list):
