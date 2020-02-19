@@ -6,14 +6,14 @@ import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
 
-name ="fm_-60712_-54519"
+name ="fm_-15400_-8300"
 info = [(59, 126), (116, 146)]
 x0 = info[1][0]
 x1 = info[1][1]
 y0 = info[0][0]
 y1 = info[0][1]
 
-Dir = "/Users/loganjaeger/Desktop/aerogel/track ims/"
+Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/"
 
 def load_in_ims(code, save_dir):
 	frame = 1

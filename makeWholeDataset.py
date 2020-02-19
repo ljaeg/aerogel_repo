@@ -120,6 +120,12 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}):
 
 
 def create_big_array_blank(code_list):
+	"""
+	something I still need to put into this is to
+	make it so that a mask will sometimes be put into these
+	maybe 1/3 mask, 2/3 regular blank?
+	What I want to do is have the same masks on blank backgrounds.
+	"""
 	big_array = []
 	for path in code_list:
 		arr, surf = construct.load_and_getDelSq(path)

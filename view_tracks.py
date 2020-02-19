@@ -8,7 +8,7 @@ import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
 
-amazon_code = "fm_41699_19390.I1130_30jan13"
+amazon_code = "fm_-15400_-8300"
 
 d = {"fm_-60712_-54519" : [(59, 126), (116, 146)], 
 "fm_21850_13198.I1016_13apr10" : [(11, 94), (90, 166)],
@@ -61,8 +61,8 @@ def load_in_ims(code):
 		#path = "/Users/loganjaeger/Desktop/aerogel/track ims/" + code + "/" + str(frame) + ".png"
 		#path = "/Users/loganjaeger/Desktop/aerogel/blanks/" + code + "/" + str(frame) + ".png"
 		#path = "/Users/loganjaeger/Desktop/aerogel/const/seventh/" + str(frame) + ".png"
-		#path = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + code + "/" + str(frame) + ".png"
-		path = "/Users/loganjaeger/Desktop/aerogel/fromHDF/no2/" + str(frame) + ".png"
+		path = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + code + "/" + str(frame) + ".png"
+		#path = "/Users/loganjaeger/Desktop/aerogel/fromHDF/no2/" + str(frame) + ".png"
 		try:
 			img = plt.imread(path)
 			#print(img.shape)
