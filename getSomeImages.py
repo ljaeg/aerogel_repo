@@ -5,7 +5,7 @@ import h5py
 import random
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "with_blank_masks.hdf5"
+datafile_name = "training.hdf5"
 SaveDir = "/home/admin/Desktop/aerogel_repo/fromHDF"
 
 DF = h5py.File(os.path.join(Dir, datafile_name), "r")
