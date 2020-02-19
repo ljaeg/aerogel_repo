@@ -45,8 +45,10 @@ def create_b(datafile, codes, name):
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
-def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max_per = None):
+def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max_per = None, shuffle = False):
 	names = [t[0] for t in os.walk(directory)][1:]
+	if shuffle:
+		np.random.shuffle(names)
 	trainYes = []
 	trainNo = []
 	testYes = []
