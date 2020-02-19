@@ -11,7 +11,7 @@ import random
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "testing.hdf5"
+datafile_name = "all_blank_masks.hdf5"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
 max_per = 50
 last = 13
@@ -103,7 +103,7 @@ def create_big_array_blank(code_list):
 	"""
 	big_array = []
 	for path in code_list:
-		insert_mask = np.random.choice([0, 1], 1, p = [.7, .3])
+		insert_mask = np.random.choice([0, 1], 1, p = [0, 1])
 		if insert_mask:
 			key = random.choice(list(construct.id_to_surface.keys()))
 			arr = construct.insert_blank_mask(key, path)[-last:]
