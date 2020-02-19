@@ -119,7 +119,9 @@ def create_big_array_blank(code_list):
 			if arr.shape[0] != last:
 				print(arr.shape)
 				continue
+		print(arr.dtype)
 		big_array.append(arr)
+	print("big arr: ", np.array(big_array).dtype)
 	return np.array(big_array)
 
 def create_big_array_track(code_list):
@@ -133,7 +135,9 @@ def create_big_array_track(code_list):
 		if arr.shape[0] != last:
 			print(arr.shape)
 			continue
+		print(arr.dtype)
 		big_array.append(arr)
+	print("big arr (yes): ", np.array(big_array).dtype)
 	return np.array(big_array)
 
 

@@ -37,7 +37,6 @@ for j in range(num_ims):
 	i = 0
 	while True:
 		try:
-			print(yes_inds[j])
 			im_slice = TrainYes[yes_inds[j], i, :, :, :]
 			#print(im_slice.dtype)
 			im = Image.fromarray(im_slice)
@@ -60,7 +59,6 @@ for j in range(num_ims):
 	i = 0
 	while True:
 		try:
-			print(no_inds[j])
 			im_slice = TrainNo[no_inds[j], i, :, :, :]
 			#print("no: ", im_slice.dtype)
 			im = Image.fromarray(im_slice)

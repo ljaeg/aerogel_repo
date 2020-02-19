@@ -74,7 +74,6 @@ def insert_blank_mask(mask_id, to_dir):
 	#Note I'm using "blank" here where track would normally go, and "background" where blank might go
 	mask_path = Dir + "/track ims/TRACK-" + mask_id + "/mask.tif"
 	mask = np.array(Image.open(mask_path))
-	print(np.max(mask))
 	key_blank = random.choice(list(testSurfaceFinders.d.keys()))
 	blank_surface = testSurfaceFinders.d[key_blank]
 	blank, __ = load_and_getDelSq(Dir + "forTestingSurface/" + key_blank)
