@@ -109,8 +109,8 @@ def save_ims(epoch, generator, latent_dim):
 
 def train(generator, discriminator, combined, latent_dim = 100, epochs = 100, batch_size = 128, number_to_do = 2, save_interval = 30):
 	#load real samples
-	real, _ = load_real_samples(number_to_do)
-	#real, _ = load_all_real_samples()
+	#real, _ = load_real_samples(number_to_do)
+	real, _ = load_all_real_samples()
 
 	#perform training for epochs = EPOCHS
 	for epoch in range(epochs):
@@ -153,7 +153,7 @@ def do():
 	gen = make_generator()
 	disc = make_discriminator()
 	comb = make_combined(gen, disc)
-	train(gen, disc, comb, epochs = 1800, batch_size = 32, save_interval = 100)
+	train(gen, disc, comb, epochs = 4000, batch_size = 32, save_interval = 500)
 
 do()
 
