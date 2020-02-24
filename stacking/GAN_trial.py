@@ -57,9 +57,9 @@ def make_discriminator():
 	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", kernel_constraint = mmn))
 	model.add(BatchNormalization(momentum = .8))
 	model.add(LeakyReLU(alpha = .2))
-	# model.add(Conv2D(4*conv_scale, kernel_size, padding = "same"))
-	# model.add(BatchNormalization(momentum = .8))
-	# model.add(LeakyReLU(alpha = .2))
+	model.add(Conv2D(4*conv_scale, kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(LeakyReLU(alpha = .2))
 	model.add(Flatten())
 	model.add(Dense(1, activation = "linear"))
 	model.compile(optimizer = RMSprop(lr = .00005), loss = binary_crossentropy, metrics = ["accuracy"])
@@ -140,7 +140,7 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 			print(" ")
 
 		#save ims
-		if not epoch % save_interval:
+		if not (epoch + 1) % save_interval:
 			save_ims(epoch, generator, latent_dim)
 
 	#save the generator
@@ -151,7 +151,7 @@ def do():
 	gen = make_generator()
 	disc = make_discriminator()
 	comb = make_combined(gen, disc)
-	train(gen, disc, comb, epochs = 1500, batch_size = 32, save_interval = 100)
+	train(gen, disc, comb, epochs = 4000, batch_size = 32, save_interval = 100)
 
 do()
 
