@@ -15,7 +15,7 @@ from keras.losses import binary_crossentropy
 import matplotlib.pyplot as plt
 import os
 
-#(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 conv_scale = 32
 kernel_size = (3, 3)
