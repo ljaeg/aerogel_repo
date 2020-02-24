@@ -27,6 +27,7 @@ def load_real_samples(number, amount = 800):
 			x.append(x_train[i])
 		i += 1
 	X = np.array(x).astype("float32")
+	X = np.expand_dims(X, axis = 3)
 	y = np.ones(amount)
 	return (X - 127.5) / 127.5, y
 
