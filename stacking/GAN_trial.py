@@ -91,7 +91,7 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 		real_y = np.ones(batch_size)
 
 		#get batch size amount of generated images
-		noise = np.random.randn(latent_dim * n_samples).reshape(n_samples, latent_dim)
+		noise = np.random.randn(latent_dim * batch_size).reshape(batch_size, latent_dim)
 		gen_ims, gen_y = generate_fake_samples(generator, latent_dim, batch_size, noise)
 
 		#train discriminator
