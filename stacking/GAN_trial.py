@@ -76,7 +76,7 @@ def save_ims(epoch, generator, latent_dim):
 	for i, im in enumerate(gen_ims, 1):
 		plt.subplot(3, 3, i)
 		plt.imshow(im.reshape(28, 28), cmap = "gray")
-	plt.imsave(os.path.join(img_save_dir, "epoch_{}.png".format(epoch_number)))
+	plt.savefig(os.path.join(img_save_dir, "epoch_{}.png".format(epoch_number)))
 
 
 
