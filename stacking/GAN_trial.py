@@ -9,7 +9,7 @@ from keras.optimizers import RMSprop
 import matplotlib.pyplot as plt
 import os
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+#(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 conv_scale = 32
 kernel_size = (3, 3)
@@ -30,6 +30,13 @@ def load_real_samples(number, amount = 800):
 	X = np.expand_dims(X, axis = 3)
 	y = np.ones(amount)
 	return (X - 127.5) / 127.5, y
+
+def load_all_real_samples(amount = 1000):
+	(x_train, _), (_, _) = mnist.load_data()
+	X = np.expand_dims(x_train, axis = -1)
+	X = X.astype("float32")
+	y = np.ones(X.shape[0])
+	return X, y
 
 def wasserstein_loss(y_true, y_pred):
 	return backend.mean(y_true * y_pred)
@@ -61,7 +68,7 @@ def make_combined(generator, discriminator):
 	model = Sequential()
 	model.add(generator)
 	model.add(discriminator)
-	model.compile(optimizer = RMSprop(lr = .02), loss = wasserstein_loss)
+	model.compile(optimizer = RMSprop(lr = .002), loss = wasserstein_loss)
 	return model
 
 def generate_fake_samples(generator, latent_dim, n_samples, noise):
@@ -77,12 +84,14 @@ def save_ims(epoch, generator, latent_dim):
 		plt.subplot(3, 3, i)
 		plt.imshow(im.reshape(28, 28), cmap = "gray")
 	plt.savefig(os.path.join(img_save_dir, "epoch_{}.png".format(epoch_number)))
+	plt.close()
 
 
 
-def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, batch_size = 128, number_to_do = 8, save_interval = 50):
+def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, batch_size = 128, number_to_do = 8, save_interval = 30):
 	#load real samples
-	real, _ = load_real_samples(number_to_do)
+	#real, _ = load_real_samples(number_to_do)
+	real, _ = load_all_real_samples()
 
 	#perform training for epochs = EPOCHS
 	for epoch in range(epochs):
@@ -109,9 +118,10 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 		print("d_loss_fake: {}".format(d_loss_fake))
 		print("d_total_loss: {}".format(d_total_loss))
 		print("g_loss: {}".format(g_loss))
+		print(" ")
 
 		#save ims
-		if not (epoch + 1) % save_interval:
+		if not epoch % save_interval:
 			save_ims(epoch, generator, latent_dim)
 
 	#save the generator
