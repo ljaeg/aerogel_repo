@@ -140,7 +140,7 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 100, ba
 		print(" ")
 
 		#save ims
-		if not epoch % save_interval:
+		if not epoch + 1 % save_interval:
 			save_ims(epoch, generator, latent_dim)
 
 	#save the generator
@@ -151,7 +151,7 @@ def do():
 	gen = make_generator()
 	disc = make_discriminator()
 	comb = make_combined(gen, disc)
-	train(gen, disc, comb)
+	train(gen, disc, comb, epochs = 700, batch_size = 32, save_interval = 50)
 
 do()
 
