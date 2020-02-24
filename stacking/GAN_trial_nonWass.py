@@ -2,7 +2,8 @@ import numpy as np
 #from PIL import Image
 from keras.models import Sequential
 from keras.datasets import mnist
-from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D, Flatten
+from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D, Flatten, BatchNormalization
+from keras.layers.advanced_activations import LeakyReLu
 from keras import backend
 from keras.constraints import MinMaxNorm
 from keras.optimizers import RMSprop, Adam
@@ -45,13 +46,18 @@ def wasserstein_loss(y_true, y_pred):
 def make_discriminator():
 	mmn = MinMaxNorm(min_value = -.01, max_value = .01)
 	model = Sequential()
+	model.add(Conv2D(conv_scale, kernel_size, padding = "same"))
+	model.add(LeakyReLu(alpha = .2))
 	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same"))
-	model.add(MaxPooling2D())
-	model.add(Conv2D(conv_scale, kernel_size, padding = "same"))
-	model.add(MaxPooling2D())
-	model.add(Conv2D(conv_scale, kernel_size, padding = "same"))
+	model.add(LeakyReLu(alpha = .2))
+	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(LeakyReLu(alpha = .2))
+	model.add(Conv2D(4*conv_scale, kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(LeakyReLu(alpha = .2))
 	model.add(Flatten())
-	model.add(Dense(1, activation = "linear"))
+	model.add(Dense(1, activation = "sigmoid"))
 	model.compile(optimizer = Adam(.0002, .5), loss = binary_crossentropy, metrics = ["accuracy"])
 	return model
 
