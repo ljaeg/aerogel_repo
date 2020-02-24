@@ -1,11 +1,17 @@
 import numpy as np 
 #from PIL import Image
+import tensorflow as tf
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.Session(config=config)
 from keras.models import Sequential
 from keras.datasets import mnist
-from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D
+from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D, Flatten, BatchNormalization, Activation
+from keras.layers.advanced_activations import LeakyReLU
 from keras import backend
 from keras.constraints import MinMaxNorm
-from keras.optimizers import RMSprop
+from keras.optimizers import RMSprop, Adam
+from keras.losses import binary_crossentropy
 import matplotlib.pyplot as plt
 import os
 
@@ -44,12 +50,19 @@ def wasserstein_loss(y_true, y_pred):
 def make_discriminator():
 	mmn = MinMaxNorm(min_value = -.01, max_value = .01)
 	model = Sequential()
-	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", activation = "relu", kernel_constraint = mmn))
-	model.add(MaxPooling2D())
-	model.add(Conv2D(conv_scale, kernel_size, padding = "same", activation = "relu", kernel_constraint = mmn))
-	model.add(GlobalMaxPooling2D())
+	model.add(Conv2D(conv_scale, kernel_size, padding = "same", kernel_constraint = mmn))
+	model.add(LeakyReLU(alpha = .2))
+	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", kernel_constraint = mmn))
+	model.add(LeakyReLU(alpha = .2))
+	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", kernel_constraint = mmn))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(LeakyReLU(alpha = .2))
+	# model.add(Conv2D(4*conv_scale, kernel_size, padding = "same"))
+	# model.add(BatchNormalization(momentum = .8))
+	# model.add(LeakyReLU(alpha = .2))
+	model.add(Flatten())
 	model.add(Dense(1, activation = "linear"))
-	model.compile(optimizer = RMSprop(lr = .0005), loss = wasserstein_loss, metrics = ["accuracy"])
+	model.compile(optimizer = RMSprop(lr = .00005), loss = binary_crossentropy, metrics = ["accuracy"])
 	return model
 
 def make_generator(latent_dim = 100):
@@ -57,10 +70,14 @@ def make_generator(latent_dim = 100):
 	model.add(Dense(128 * 7 * 7, activation = "relu", input_shape = (latent_dim,)))
 	model.add(Reshape((7, 7, 128)))
 	model.add(UpSampling2D())
-	model.add(Conv2D(2*conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(Conv2D(4*conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(Activation("relu"))
 	model.add(UpSampling2D())
-	model.add(Conv2D(conv_scale, kernel_size = kernel_size, padding = "same"))
-	model.add(Conv2D(1, kernel_size = kernel_size, padding = "same", activation = "tanh"))
+	model.add(Conv2D(4*conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(Activation("relu"))
+	model.add(Conv2D(1, kernel_size = (7, 7), padding = "same", activation = "tanh"))
 	return model
 
 def make_combined(generator, discriminator):
@@ -68,7 +85,7 @@ def make_combined(generator, discriminator):
 	model = Sequential()
 	model.add(generator)
 	model.add(discriminator)
-	model.compile(optimizer = RMSprop(lr = .002), loss = wasserstein_loss)
+	model.compile(optimizer = RMSprop(lr = .00005), loss = wasserstein_loss)
 	return model
 
 def generate_fake_samples(generator, latent_dim, n_samples, noise):
@@ -81,8 +98,10 @@ def save_ims(epoch, generator, latent_dim):
 	noise = np.random.randn(9 * latent_dim).reshape(9, latent_dim)
 	gen_ims = generator.predict(noise)
 	for i, im in enumerate(gen_ims, 1):
+		im = ((.5 * im) + .5).reshape((28, 28))
 		plt.subplot(3, 3, i)
-		plt.imshow(im.reshape(28, 28), cmap = "gray")
+		plt.imshow(im, cmap = "gray")
+		plt.axis("off")
 	plt.savefig(os.path.join(img_save_dir, "epoch_{}.png".format(epoch_number)))
 	plt.close()
 
@@ -90,8 +109,8 @@ def save_ims(epoch, generator, latent_dim):
 
 def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, batch_size = 128, number_to_do = 8, save_interval = 30):
 	#load real samples
-	#real, _ = load_real_samples(number_to_do)
-	real, _ = load_all_real_samples()
+	real, _ = load_real_samples(number_to_do)
+	#real, _ = load_all_real_samples()
 
 	#perform training for epochs = EPOCHS
 	for epoch in range(epochs):
@@ -112,14 +131,13 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 		#train generator
 		if not epoch % 5:
 			g_loss = combined.train_on_batch(noise, gen_y)
-
-		#show progress
-		print("epoch {}/{}".format(epoch + 1, epochs))
-		print("d_loss_real: {}".format(d_loss_real))
-		print("d_loss_fake: {}".format(d_loss_fake))
-		print("d_total_loss: {}".format(d_total_loss))
-		print("g_loss: {}".format(g_loss))
-		print(" ")
+			#show progress
+			print("epoch {}/{}".format(epoch + 1, epochs))
+			print("d_loss_real: {}".format(d_loss_real))
+			print("d_loss_fake: {}".format(d_loss_fake))
+			print("d_total_loss: {}".format(d_total_loss))
+			print("g_loss: {}".format(g_loss))
+			print(" ")
 
 		#save ims
 		if not epoch % save_interval:
@@ -133,7 +151,7 @@ def do():
 	gen = make_generator()
 	disc = make_discriminator()
 	comb = make_combined(gen, disc)
-	train(gen, disc, comb)
+	train(gen, disc, comb, epochs = 700, batch_size = 32, save_interval = 100)
 
 do()
 

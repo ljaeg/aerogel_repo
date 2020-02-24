@@ -52,7 +52,7 @@ def make_discriminator():
 	model = Sequential()
 	model.add(Conv2D(conv_scale, kernel_size, padding = "same"))
 	model.add(LeakyReLU(alpha = .2))
-	model.add(Conv2D(conv_scale, kernel_size, padding = "same"))
+	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same"))
 	model.add(LeakyReLU(alpha = .2))
 	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same"))
 	model.add(BatchNormalization(momentum = .8))
@@ -60,8 +60,7 @@ def make_discriminator():
 	# model.add(Conv2D(4*conv_scale, kernel_size, padding = "same"))
 	# model.add(BatchNormalization(momentum = .8))
 	# model.add(LeakyReLU(alpha = .2))
-	model.add(GlobalMaxPooling2D())
-	#model.add(Flatten())
+	model.add(Flatten())
 	model.add(Dense(1, activation = "sigmoid"))
 	model.compile(optimizer = Adam(.0002, .05), loss = binary_crossentropy, metrics = ["accuracy"])
 	return model
