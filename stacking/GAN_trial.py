@@ -101,7 +101,7 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 		d_total_loss = .5 * np.add(d_loss_fake, d_loss_real)
 
 		#train generator
-		g_loss = combined.train_on_batch(noise, real_y)
+		g_loss = combined.train_on_batch(noise, gen_y)
 
 		#show progress
 		print("epoch {}/{}".format(epoch + 1, epochs))
