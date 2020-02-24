@@ -77,7 +77,7 @@ def make_generator(latent_dim = 100):
 	model.add(Conv2D(2*conv_scale, kernel_size = kernel_size, padding = "same"))
 	model.add(BatchNormalization(momentum = .8))
 	model.add(Activation("relu"))
-	model.add(Conv2D(1, kernel_size = (7, 7), padding = "same", activation = "tanh"))
+	model.add(Conv2D(1, kernel_size = (5, 5), padding = "same", activation = "tanh"))
 	return model
 
 def make_combined(generator, discriminator):
@@ -107,7 +107,7 @@ def save_ims(epoch, generator, latent_dim):
 
 
 
-def train(generator, discriminator, combined, latent_dim = 100, epochs = 100, batch_size = 128, number_to_do = 1, save_interval = 30):
+def train(generator, discriminator, combined, latent_dim = 100, epochs = 100, batch_size = 128, number_to_do = 2, save_interval = 30):
 	#load real samples
 	real, _ = load_real_samples(number_to_do)
 	#real, _ = load_all_real_samples()
