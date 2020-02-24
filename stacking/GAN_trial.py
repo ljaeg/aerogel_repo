@@ -129,7 +129,7 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 		d_total_loss = .5 * np.add(d_loss_fake, d_loss_real)
 
 		#train generator
-		if not epoch % 5:
+		if not (epoch + 1) % 5:
 			g_loss = combined.train_on_batch(noise, gen_y)
 			#show progress
 			print("epoch {}/{}".format(epoch + 1, epochs))
@@ -151,7 +151,7 @@ def do():
 	gen = make_generator()
 	disc = make_discriminator()
 	comb = make_combined(gen, disc)
-	train(gen, disc, comb, epochs = 700, batch_size = 32, save_interval = 100)
+	train(gen, disc, comb, epochs = 1500, batch_size = 32, save_interval = 100)
 
 do()
 
