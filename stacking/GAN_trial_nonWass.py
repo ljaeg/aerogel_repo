@@ -3,7 +3,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.datasets import mnist
 from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D, Flatten, BatchNormalization
-from keras.layers.advanced_activations import LeakyReLu
+from keras.layers import LeakyReLU
 from keras import backend
 from keras.constraints import MinMaxNorm
 from keras.optimizers import RMSprop, Adam
