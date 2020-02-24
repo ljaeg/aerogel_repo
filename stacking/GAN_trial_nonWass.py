@@ -50,7 +50,7 @@ def make_discriminator():
 	model.add(Conv2D(conv_scale, kernel_size, padding = "same", activation = "relu"))
 	model.add(MaxPooling2D())
 	model.add(Conv2D(conv_scale, kernel_size, padding = "same", activation = "relu"))
-	model.Flatten()
+	model.add(Flatten())
 	model.add(Dense(1, activation = "linear"))
 	model.compile(optimizer = Adam(.0002, .5), loss = binary_crossentropy, metrics = ["accuracy"])
 	return model
