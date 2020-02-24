@@ -153,7 +153,7 @@ def do():
 	gen = make_generator()
 	disc = make_discriminator()
 	comb = make_combined(gen, disc)
-	train(gen, disc, comb, epochs = 700, batch_size = 32, save_interval = 50)
+	train(gen, disc, comb, epochs = 1800, batch_size = 32, save_interval = 100)
 
 do()
 
