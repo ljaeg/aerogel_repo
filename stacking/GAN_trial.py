@@ -17,7 +17,7 @@ dense_scale = 8
 Save_dir = "/home/admin/Desktop/aerogel_repo/mnist.h5"
 img_save_dir = "/home/admin/Desktop/aerogel_repo/mnist_ims"
 
-def load_real_samples(number, amount = 500):
+def load_real_samples(number, amount = 800):
 	x = []
 	i = 0
 	added = 0
@@ -44,7 +44,7 @@ def make_discriminator():
 	model.compile(optimizer = RMSprop(lr = .0005, momentum = 0), loss = wasserstein_loss, metrics = [accuracy])
 	return model
 
-def make_generator(latent_dim):
+def make_generator(latent_dim = 100):
 	model = Sequential()
 	model.add(Dense(128 * 7 * 7, activation = "relu", input_shape = (latent_dim)))
 	model.add(Reshape((7, 7, 128)))
@@ -79,7 +79,7 @@ def save_ims(epoch, generator, latent_dim):
 
 
 
-def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, batch_size = 128, number_to_do = 3, save_interval = 50):
+def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, batch_size = 128, number_to_do = 8, save_interval = 50):
 	#load real samples
 	real, _ = load_real_samples(number_to_do)
 
@@ -118,10 +118,12 @@ def train(generator, discriminator, combined, latent_dim = 100, epochs = 150, ba
 
 
 def do():
+	gen = make_generator()
+	disc = make_discriminator()
+	comb = make_combined(gen, disc)
+	train(gen, disc, comb)
 
-
-
-
+do()
 
 
 
