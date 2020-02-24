@@ -2,7 +2,7 @@ import numpy as np
 #from PIL import Image
 from keras.models import Sequential
 from keras.datasets import mnist
-from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D
+from keras.layers import Dense, Conv2D, Conv2DTranspose, Dropout, MaxPooling2D, GlobalMaxPooling2D, Reshape, UpSampling2D, Flatten
 from keras import backend
 from keras.constraints import MinMaxNorm
 from keras.optimizers import RMSprop, Adam
@@ -48,7 +48,9 @@ def make_discriminator():
 	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", activation = "relu"))
 	model.add(MaxPooling2D())
 	model.add(Conv2D(conv_scale, kernel_size, padding = "same", activation = "relu"))
-	model.add(GlobalMaxPooling2D())
+	model.add(MaxPooling2D())
+	model.add(Conv2D(conv_scale, kernel_size, padding = "same", activation = "relu"))
+	model.Flatten()
 	model.add(Dense(1, activation = "linear"))
 	model.compile(optimizer = Adam(.0002, .5), loss = binary_crossentropy, metrics = ["accuracy"])
 	return model
