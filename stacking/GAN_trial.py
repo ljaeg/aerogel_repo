@@ -41,7 +41,7 @@ def make_discriminator():
 	model.add(Conv2D(conv_scale, kernel_size, padding = "same", activation = "relu", kernel_constraint = mmn))
 	model.add(GlobalMaxPooling2D())
 	model.add(Dense(1, activation = "linear"))
-	model.compile(optimizer = RMSprop(lr = .0005), loss = wasserstein_loss, metrics = [accuracy])
+	model.compile(optimizer = RMSprop(lr = .0005), loss = wasserstein_loss, metrics = ["accuracy"])
 	return model
 
 def make_generator(latent_dim = 100):
