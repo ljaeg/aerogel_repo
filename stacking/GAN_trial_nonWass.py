@@ -66,9 +66,13 @@ def make_generator(latent_dim = 100):
 	model.add(Dense(128 * 7 * 7, activation = "relu", input_shape = (latent_dim,)))
 	model.add(Reshape((7, 7, 128)))
 	model.add(UpSampling2D())
-	model.add(Conv2D(2*conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(Conv2D(4*conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(Activation("relu"))
 	model.add(UpSampling2D())
-	model.add(Conv2D(conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(Conv2D(2*conv_scale, kernel_size = kernel_size, padding = "same"))
+	model.add(BatchNormalization(momentum = .8))
+	model.add(Activation("relu"))
 	model.add(Conv2D(1, kernel_size = kernel_size, padding = "same", activation = "tanh"))
 	return model
 
