@@ -5,8 +5,14 @@ import h5py
 import random
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "testing.hdf5"
+datafile_name = "all_blank_masks.hdf5"
 SaveDir = "/home/admin/Desktop/aerogel_repo/fromHDF"
+
+print("If you don't input a datafile name, we will use the file {}".format(datafile_name))
+new_file_name = input("What file name? ")
+if new_file_name != "":
+	datafile_name = new_file_name
+print("Using {}".format(datafile_name))
 
 DF = h5py.File(os.path.join(Dir, datafile_name), "r")
 TrainYes = DF["TrainYes"]
@@ -24,12 +30,6 @@ numIms2 = TrainNo.shape[0]
 
 yes_inds = np.random.randint(0, high = numIms1, size = num_ims)
 no_inds = np.random.randint(0, high = numIms2, size = num_ims)
-
-print("If you don't input a datafile name, we will use the file {}".format(datafile_name))
-new_file_name = input("What file name? ")
-if new_file_name != "":
-	datafile_name = new_file_name
-print("Using {}".format(datafile_name))
 
 for j in range(num_ims):
 	if not os.path.exists(os.path.join(SaveDir, "yes" + str(j))):

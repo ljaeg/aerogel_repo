@@ -103,7 +103,7 @@ def create_big_array_blank(code_list):
 	"""
 	big_array = []
 	for path in code_list:
-		insert_mask = np.random.choice([0, 1], 1, p = [0, 1])
+		insert_mask = np.random.choice([0, 1], 1, p = [2/3, 1/3])
 		if insert_mask:
 			key = random.choice(list(construct.id_to_surface.keys()))
 			arr = construct.insert_blank_mask(key, path)[-last:]
