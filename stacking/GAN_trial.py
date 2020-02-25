@@ -116,8 +116,8 @@ def save_best_images(epoch, generator, critic, latent_dim):
 	indices = np.arange(len(critic_scores))
 	d = dict(zip(indices, critic_scores))
 	best_9 = sorted(d, key=d.get, reverse=True)[:9]
-	for i in best_9:
-		im = gen_ims[i, :, :, 0]
+	for i, ind in enumerate(best_9, 1):
+		im = gen_ims[ind, :, :, 0]
 		im = ((.5 * im) + .5)
 		plt.subplot(3, 3, i)
 		plt.imshow(im, cmap = "gray")
