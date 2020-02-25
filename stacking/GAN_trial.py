@@ -55,7 +55,7 @@ def make_discriminator():
 	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", kernel_constraint = mmn))
 	model.add(LeakyReLU(alpha = .2))
 	model.add(Conv2D(2*conv_scale, kernel_size, padding = "same", kernel_constraint = mmn))
-	model.add(BatchNormalization(momentum = .9))
+	model.add(BatchNormalization(momentum = .95))
 	model.add(LeakyReLU(alpha = .2))
 	# model.add(Conv2D(2*conv_scale, kernel_size, padding = "same"))
 	# model.add(BatchNormalization(momentum = .8))
@@ -71,14 +71,14 @@ def make_generator(latent_dim = 100):
 	model.add(Reshape((7, 7, 128)))
 	model.add(UpSampling2D())
 	model.add(Conv2D(4*conv_scale, kernel_size = kernel_size, padding = "same"))
-	model.add(BatchNormalization(momentum = .9))
+	model.add(BatchNormalization(momentum = .95))
 	model.add(Activation("relu"))
 	model.add(UpSampling2D())
 	model.add(Conv2D(4*conv_scale, kernel_size = kernel_size, padding = "same"))
-	model.add(BatchNormalization(momentum = .9))
+	model.add(BatchNormalization(momentum = .95))
 	model.add(Activation("relu"))
 	model.add(Conv2D(4*conv_scale, kernel_size = kernel_size, padding = "same"))
-	model.add(BatchNormalization(momentum = .9))
+	model.add(BatchNormalization(momentum = .95))
 	model.add(Activation("relu"))
 	model.add(Conv2D(1, kernel_size = (7, 7), padding = "same", activation = "tanh"))
 	return model
@@ -88,7 +88,7 @@ def make_combined(generator, discriminator):
 	model = Sequential()
 	model.add(generator)
 	model.add(discriminator)
-	model.compile(optimizer = RMSprop(lr = .0001), loss = wasserstein_loss)
+	model.compile(optimizer = RMSprop(lr = .00005), loss = wasserstein_loss)
 	return model
 
 def generate_fake_samples(generator, latent_dim, n_samples, noise):
