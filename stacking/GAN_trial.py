@@ -113,10 +113,12 @@ def save_best_images(epoch, generator, critic, latent_dim):
 	noise = np.random.randn(100 * latent_dim).reshape(100, latent_dim)
 	gen_ims = generator.predict(noise)
 	critic_scores = critic.predict(gen_ims)
-	d = dict(zip(gen_ims, critic_scores))
+	indices = np.arange(len(critic_scores))
+	d = dict(zip(indices, critic_scores))
 	best_9 = sorted(d, key=d.get, reverse=True)[:9]
-	for i, im in enumerate(best_9, 1):
-		im = ((.5 * im) + .5).reshape((28, 28))
+	for i in best_9:
+		im = gen_ims[i, :, :, 0]
+		im = ((.5 * im) + .5)
 		plt.subplot(3, 3, i)
 		plt.imshow(im, cmap = "gray")
 		plt.axis("off")
