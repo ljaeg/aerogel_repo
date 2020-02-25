@@ -97,7 +97,8 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 		try:
 			b_arr = blank[blank_index, :, :, :] * 255
 			t_arr = track[track_index, :, :, :] * 255
-			t_arr = match_histograms(t_arr, b_arr)
+			#t_arr = match_histograms(t_arr, b_arr)
+			t_arr = adjust_brightness(t_arr, b_arr)
 			b_slice = Image.fromarray(b_arr.astype(np.uint8))
 			t_slice = Image.fromarray(t_arr.astype(np.uint8))
 			b_slice.paste(t_slice, (x_pos, y_pos), mask = m)
@@ -111,6 +112,20 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 		except IndexError:
 			break
 	return np.array(end)
+
+def adjust_brightness(im, background):
+	for i in range(3):
+		background_mean = int(np.mean(background[:, :, i]))
+		im_mean = int(np.mean(im[:, :, i]))
+		dif = background_mean - im_mean
+		if dif > 0:
+			im[:, :, i] = np.where(im[:, :, i] + dif > 255, 255, im[:, :, i])
+			im[:, :, i] = np.where(im[:, :, i] + dif > 255, im[:, :, i], im[:, :, i] + dif)
+		else:
+			im[:, :, i] = np.where(im[:, :, i] + dif < 0, 0, im[:, :, i])
+			im[:, :, i] = np.where(im[:, :, i] + dif < 0, im[:, :, i], im[:, :, i] + dif)
+	return im
+
 
 def augment(movie, mask):
 	#MOVIE is a 3d array that represents each slice of the movie stacked on top of each other
