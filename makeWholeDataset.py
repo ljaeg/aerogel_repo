@@ -91,6 +91,7 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max
 	print("ValNo: ", len(valNo))
 	print(length)
 	if max_per:
+		print("max per: {}".format(max_per))
 		return trainYes[:max_per], trainNo[:max_per], testYes[:max_per], testNo[:max_per], valYes[:max_per], valNo[:max_per]
 	else:
 		return trainYes, trainNo, testYes, testNo, valYes, valNo

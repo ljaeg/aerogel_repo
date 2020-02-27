@@ -108,7 +108,7 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 			b_arr = blank[blank_index, :, :, :] * 255
 			t_arr = track[track_index, :, :, :] * 255
 			#t_arr = match_histograms(t_arr, b_arr)
-			t_arr = adjust_brightness(t_arr, b_arr)
+			#t_arr = adjust_brightness(t_arr, b_arr)
 			b_slice = Image.fromarray(b_arr.astype(np.uint8))
 			t_slice = Image.fromarray(t_arr.astype(np.uint8))
 			b_slice.paste(t_slice, (x_pos, y_pos), mask = m)
@@ -148,7 +148,7 @@ def augment(movie, mask):
 	# 	movie[:, :, i, :] = datagen_zy.apply_transform(movie[:, :, i, :], z_transform)
 
 	#now transform every horizontal slice
-	datagen_xy = ImageDataGenerator(zoom_range = .2, rotation_range = 90, shear_range = 10, horizontal_flip = True, vertical_flip = True)
+	datagen_xy = ImageDataGenerator(zoom_range = [.75, 1.1], rotation_range = 90, shear_range = 10, horizontal_flip = True, vertical_flip = True)
 	xy_transform = datagen_xy.get_random_transform(movie.shape[1:3])
 	for i in range(movie.shape[0]):
 		movie[i, :, :, :] = datagen_xy.apply_transform(movie[i, :, :, :], xy_transform)
