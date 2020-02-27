@@ -5,7 +5,7 @@ import h5py
 import random
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "all_blank_masks.hdf5"
+datafile_name = "FOV100.hdf5"
 SaveDir = "/home/admin/Desktop/aerogel_repo/fromHDF"
 
 print("If you don't input a datafile name, we will use the file {}".format(datafile_name))
