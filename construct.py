@@ -100,6 +100,10 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 	y_shape = blank.shape[2]
 	x_pos = random.randint(20, x_shape - 20)
 	y_pos = random.randint(20, y_shape - 20)
+	##
+	x_pos = 50
+	y_pos = 50
+	##
 	m = Image.fromarray(np.uint8(mask))
 	end = []
 	i = 1
@@ -108,7 +112,7 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 			b_arr = blank[blank_index, :, :, :] * 255
 			t_arr = track[track_index, :, :, :] * 255
 			#t_arr = match_histograms(t_arr, b_arr)
-			#t_arr = adjust_brightness(t_arr, b_arr)
+			#ct_arr = adjust_brightness(t_arr, b_arr)
 			b_slice = Image.fromarray(b_arr.astype(np.uint8))
 			t_slice = Image.fromarray(t_arr.astype(np.uint8))
 			b_slice.paste(t_slice, (x_pos, y_pos), mask = m)
