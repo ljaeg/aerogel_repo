@@ -55,11 +55,15 @@ def get_subimages(big_arr, mask_shape):
 	y = np.random.randint(0, high = bas[2] - mask_shape[1])
 	return big_arr[:, x:x+mask_shape[0], y:y+mask_shape[1], :]
 
-
-def insert(from_id, to_dir):
+#shape = None signifies a full sized image
+def insert(from_id, to_dir, shape = None):
 	track, track_surface = load_and_getDelSq(Dir + "/track ims/TRACK-" + from_id)
 	track_surface = id_to_surface[from_id]
 	blank, blank_surface = load_and_getDelSq(to_dir)
+	##
+	if shape:
+		blank = get_subimages(blank, shape)
+	##
 	mask_path = Dir + "/track ims/TRACK-" + from_id + "/mask.tif"
 	mask = np.array(Image.open(mask_path))
 	# print(mask.shape)
@@ -70,7 +74,7 @@ def insert(from_id, to_dir):
 	return paste_save(track, mask, blank, track_index = i, blank_index = j)
 
 
-def insert_blank_mask(mask_id, to_dir):
+def insert_blank_mask(mask_id, to_dir, shape = None):
 	#Note I'm using "blank" here where track would normally go, and "background" where blank might go
 	mask_path = Dir + "/track ims/TRACK-" + mask_id + "/mask.tif"
 	mask = np.array(Image.open(mask_path))
@@ -80,6 +84,10 @@ def insert_blank_mask(mask_id, to_dir):
 	small_blank = get_subimages(blank, mask.shape)
 	small_blank, mask = augment(small_blank, mask)
 	background, background_sur = load_and_getDelSq(to_dir)
+	##
+	if shape:
+		background = get_subimages(background, shape)
+	##
 	dif = blank_surface - background_sur
 	i, j = assign_ij(dif)
 	return paste_save(small_blank, mask, background, track_index = i, blank_index = j)
@@ -88,8 +96,10 @@ def insert_blank_mask(mask_id, to_dir):
 	
 
 def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False):
-	x_pos = random.randint(50, 450)
-	y_pos = random.randint(50, 300)
+	x_shape = blank.shape[1]
+	y_shape = blank.shape[2]
+	x_pos = random.randint(20, x_shape - 20)
+	y_pos = random.randint(20, y_shape - 20)
 	m = Image.fromarray(np.uint8(mask))
 	end = []
 	i = 1
@@ -138,7 +148,7 @@ def augment(movie, mask):
 	# 	movie[:, :, i, :] = datagen_zy.apply_transform(movie[:, :, i, :], z_transform)
 
 	#now transform every horizontal slice
-	datagen_xy = ImageDataGenerator(zoom_range = .2, rotation_range = 45, shear_range = 10, horizontal_flip = True, vertical_flip = True)
+	datagen_xy = ImageDataGenerator(zoom_range = .2, rotation_range = 90, shear_range = 10, horizontal_flip = True, vertical_flip = True)
 	xy_transform = datagen_xy.get_random_transform(movie.shape[1:3])
 	for i in range(movie.shape[0]):
 		movie[i, :, :, :] = datagen_xy.apply_transform(movie[i, :, :, :], xy_transform)

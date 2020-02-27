@@ -11,37 +11,39 @@ import random
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "all_blank_masks.hdf5"
+datafile_name = "FOV100.hdf5"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
 max_per = 50
 last = 13
+#If full images, make size = None, else make it a tuple with your desired shape of the images. For example, size = (100, 100)
+size = (100, 100)
 
 def make_hdf():
 	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", ttv_split = train_test_val, max_per = max_per)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
-	create_t(datafile, ty_codes, "TrainYes")
+	create_t(datafile, ty_codes, "TrainYes", size = size)
 	print("Done with TrainYes")
-	create_b(datafile, tn_codes, "TrainNo")
+	create_b(datafile, tn_codes, "TrainNo", size = size)
 	print("Done with TrainNo")
-	create_t(datafile, tey_codes, "TestYes")
+	create_t(datafile, tey_codes, "TestYes", size = size)
 	print("Done with TestYes")
-	create_b(datafile, ten_codes, "TestNo")
+	create_b(datafile, ten_codes, "TestNo", size = size)
 	print("Done with TestNo")
-	create_t(datafile, vy_codes, "ValYes")
+	create_t(datafile, vy_codes, "ValYes", size = size)
 	print("Done with ValYes")
-	create_b(datafile, vn_codes, "ValNo")
+	create_b(datafile, vn_codes, "ValNo", size = size)
 	print("Done with ValNo")
 
 	datafile.close()
 
-def create_t(datafile, codes, name):
-	arr = create_big_array_track(codes)
+def create_t(datafile, codes, name, size = None):
+	arr = create_big_array_track(codes, size = size)
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
-def create_b(datafile, codes, name):
-	arr = create_big_array_blank(codes)
+def create_b(datafile, codes, name, size = None):
+	arr = create_big_array_blank(codes, size = size)
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
@@ -94,21 +96,19 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max
 		return trainYes, trainNo, testYes, testNo, valYes, valNo
 
 
-def create_big_array_blank(code_list):
-	"""
-	something I still need to put into this is to
-	make it so that a mask will sometimes be put into these
-	maybe 1/3 mask, 2/3 regular blank?
-	What I want to do is have the same masks on blank backgrounds.
-	"""
+def create_big_array_blank(code_list, size = None):
 	big_array = []
 	for path in code_list:
 		insert_mask = np.random.choice([0, 1], 1, p = [2/3, 1/3])
 		if insert_mask:
 			key = random.choice(list(construct.id_to_surface.keys()))
-			arr = construct.insert_blank_mask(key, path)[-last:]
+			arr = construct.insert_blank_mask(key, path, shape = size)[-last:]
 		else:
 			arr, surf = construct.load_and_getDelSq(path)
+			##
+			if size:
+				arr = construct.get_subimages(arr, size)
+			##
 			arr = (arr * 255).astype("uint8")
 			x = random.randint(-1, 3)
 			if surf + x + last > arr.shape[0]:
@@ -122,12 +122,12 @@ def create_big_array_blank(code_list):
 	big_array = np.array(big_array)
 	return big_array
 
-def create_big_array_track(code_list):
+def create_big_array_track(code_list, size = None):
 	big_array = []
 	for path in code_list:
 		key = random.choice(list(construct.id_to_surface.keys()))
 		try:
-			arr = construct.insert(key, path)[-last:]
+			arr = construct.insert(key, path, shape = size)[-last:]
 		except OSError:
 			continue
 		if arr.shape[0] != last:
