@@ -112,7 +112,7 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 			b_arr = blank[blank_index, :, :, :] * 255
 			t_arr = track[track_index, :, :, :] * 255
 			#t_arr = match_histograms(t_arr, b_arr)
-			#ct_arr = adjust_brightness(t_arr, b_arr)
+			t_arr = adjust_brightness(t_arr, b_arr)
 			b_slice = Image.fromarray(b_arr.astype(np.uint8))
 			t_slice = Image.fromarray(t_arr.astype(np.uint8))
 			b_slice.paste(t_slice, (x_pos, y_pos), mask = m)
