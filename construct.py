@@ -101,8 +101,8 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 	x_pos = random.randint(20, x_shape - 20)
 	y_pos = random.randint(20, y_shape - 20)
 	##
-	x_pos = 50
-	y_pos = 50
+	x_pos = 2
+	y_pos = 2
 	##
 	m = Image.fromarray(np.uint8(mask))
 	end = []
