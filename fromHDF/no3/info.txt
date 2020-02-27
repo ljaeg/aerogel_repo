@@ -2,5 +2,5 @@ j=3
 no index: 10
 seed: 4673
 Dir: /home/admin/Desktop/aerogel_preprocess
-datafile_name: all_blank_masks.hdf5
+datafile_name: FOV100.hdf5
 SaveDir: /home/admin/Desktop/aerogel_repo/fromHDF
