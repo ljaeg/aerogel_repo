@@ -39,7 +39,11 @@ def load_and_getDelSq(path_base):
 			break
 	if ind > 25:
 		ind = 25
-	return np.array(arr), ind
+	arr = np.array(arr)
+	if arr.shape == (0,):
+		print("IT'S GOING WRONG UP HERE THIS IS IT: ")
+		print(path_base)
+	return arr, ind
 
 def assign_ij(difference):
 	if difference > 0:
@@ -83,8 +87,6 @@ def insert_blank_mask(mask_id, to_dir, shape = None):
 	key_blank = random.choice(list(testSurfaceFinders.d.keys()))
 	blank_surface = testSurfaceFinders.d[key_blank]
 	blank, __ = load_and_getDelSq(Dir + "forTestingSurface/" + key_blank)
-	if blank.shape[1:] != (384, 512, 4):
-		print("blank is from: {}".format(key_blank))
 	small_blank = get_subimages(blank, mask.shape)
 	small_blank, mask = augment(small_blank, mask)
 	background, background_sur = load_and_getDelSq(to_dir)
