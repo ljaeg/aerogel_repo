@@ -35,7 +35,7 @@ def load_and_getDelSq(path_base):
 				max_DelSq = ds
 				ind = i
 			i += 1
-		except FileNotFoundError, OSError:
+		except (FileNotFoundError, OSError):
 			break
 	if ind > 25:
 		ind = 25
