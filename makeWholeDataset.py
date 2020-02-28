@@ -61,7 +61,7 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max
 	valYes = []
 	valNo = []
 	length = len(names)
-	while len(TrainYes) < min_number_in_trainYes:
+	while len(trainYes) < min_number_in_trainYes:
 		np.random.shuffle(names)
 		i = 0
 		k = length * ttv_split["train"] * .5
