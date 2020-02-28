@@ -51,7 +51,7 @@ def assign_ij(difference):
 
 def get_subimages(big_arr, mask_shape):
 	bas = big_arr.shape
-	if bas[1:] != (100, 100, 4):
+	if bas[1:] != (384, 512, 4):
 		print(bas)
 	x = np.random.randint(0, high = bas[1] - mask_shape[0])
 	y = np.random.randint(0, high = bas[2] - mask_shape[1])
