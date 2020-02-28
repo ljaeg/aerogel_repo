@@ -113,7 +113,11 @@ def create_big_array_blank(code_list, size = None):
 			arr, surf = construct.load_and_getDelSq(path)
 			##
 			if size:
-				arr = construct.get_subimages(arr, size)
+				try:
+					arr = construct.get_subimages(arr, size)
+				except IndexError:
+					print(path)
+					arr = construct.get_subimages(arr, size)
 			##
 			arr = (arr * 255).astype("uint8")
 			x = random.randint(-1, 3)
