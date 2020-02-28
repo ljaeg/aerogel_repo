@@ -28,19 +28,14 @@ def load_and_getDelSq(path_base):
 	while True:
 		from_path = path_base + "/" + str(i) + ".png"
 		try:
-			try:
-				img = plt.imread(from_path)
-			except OSError:
-				print(from_path)
-				img = plt.imread(from_path)
-				print("got thru")
+			img = plt.imread(from_path)
 			arr.append(img)
 			ds = np.sum(laplace(img[:, :, 0]) ** 2)
 			if ds > max_DelSq:
 				max_DelSq = ds
 				ind = i
 			i += 1
-		except FileNotFoundError:
+		except FileNotFoundError, OSError:
 			break
 	if ind > 25:
 		ind = 25
