@@ -83,7 +83,7 @@ def insert_blank_mask(mask_id, to_dir, shape = None):
 	key_blank = random.choice(list(testSurfaceFinders.d.keys()))
 	blank_surface = testSurfaceFinders.d[key_blank]
 	blank, __ = load_and_getDelSq(Dir + "forTestingSurface/" + key_blank)
-	if blank.shape == (0,):
+	if blank.shape[1:] != (384, 512, 4):
 		print("blank is from: {}".format(key_blank))
 	small_blank = get_subimages(blank, mask.shape)
 	small_blank, mask = augment(small_blank, mask)
