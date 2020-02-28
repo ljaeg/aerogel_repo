@@ -28,7 +28,12 @@ def load_and_getDelSq(path_base):
 	while True:
 		from_path = path_base + "/" + str(i) + ".png"
 		try:
-			img = plt.imread(from_path)
+			try:
+				img = plt.imread(from_path)
+			except OSError:
+				print(from_path)
+				img = plt.imread(from_path)
+				print("got thru")
 			arr.append(img)
 			ds = np.sum(laplace(img[:, :, 0]) ** 2)
 			if ds > max_DelSq:
@@ -40,9 +45,11 @@ def load_and_getDelSq(path_base):
 	if ind > 25:
 		ind = 25
 	arr = np.array(arr)
+	##
 	if arr.shape == (0,):
 		print("IT'S GOING WRONG UP HERE THIS IS IT: ")
 		print(path_base)
+	##
 	return arr, ind
 
 def assign_ij(difference):
