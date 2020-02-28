@@ -37,26 +37,41 @@ def stack_one_channel(channel, save = False):
 	return r
 
 def stack():
-	number = 3
-	arr = np.zeros((384, 512, number))
-	for i in range(number):
+	#This stacks along the z-axis (works)
+	channels = 3
+	arr = np.zeros((384, 512, channels))
+	for i in range(channels):
 		x = stack_one_channel(i)
 		arr[..., i] = x
 	arr = arr * 255
 	arr = Image.fromarray(arr.astype("uint8"))
 	arr.save(os.path.join(save_path, "stacked_img.png"))
 
+def stack_x():
+	#This stacks along the x-axis (DNW)
+	channels = 3
+	arr = np.zeros((512, 45, channels))
+	for i in range(channels):
+		x = stack_copy(i)
+		arr[..., i] = x
+	arr = arr * 255
+	arr = Image.fromarray(arr.astype("uint8"))
+	arr.save(os.path.join(save_path, "stacked_img_x.png"))
+
+def stack_y():
+	#This stacks along the y-axis (DNW)
+	return 0
 
 def stack_copy(channel, save = False):
 	movie = load_in_movie(path_to_movie)[:, :, :, channel]
 	d, h, w = movie.shape
-	focus = np.array([mh.sobel(t, just_filter=True) for t in movie])
+	focus = get_focus(movie, 1)
 	print(focus.shape)
-	best = np.argmax(focus, 1)
-	movie = movie.reshape((h,-1)) # movie is now (d, nr_pixels)
-	movie = movie.transpose() # movie is now (nr_pixels, d)
+	best = np.argmax(focus, 0)
+	movie = movie.reshape((h,-1)) # movie is now (h, nr_pixels)
+	movie = movie.transpose() # movie is now (nr_pixels, h)
 	r = movie[np.arange(len(movie)), best.ravel()] # Select the right pixel at each location
-	r = r.reshape((d,w)) # reshape to get final result
+	r = r.reshape((w,d)) # reshape to get final result
 	if save:
 		r = Image.fromarray(r)
 		r.save(os.path.join(save_path, "stacked_img_test.png"))
@@ -66,7 +81,7 @@ def stack_copy_2(channel, save = False):
 	movie = load_in_movie(path_to_movie)[:, :, :, channel]
 	d, h, w = movie.shape
 	#focus = np.array([mh.sobel(t, just_filter=True) for t in movie])
-	focus = get_focus(movie, 2)
+	focus = get_focus(movie, 1)
 	print(focus.shape)
 	best = np.argmax(focus, 0)
 	movie = movie.reshape((w,-1)) # movie is now (d, nr_pixels)
@@ -93,7 +108,7 @@ def get_focus(movie, direction):
 		for i in range(s[2]):
 			x.append(mh.sobel(movie[:, :, i], just_filter = True))
 		return np.array(x)
-stack()
+#stack()
 
 def stack_test2():
 	number = 3
@@ -106,6 +121,16 @@ def stack_test2():
 	arr.save(os.path.join(save_path, "stacked_img_33.png"))
 
 #stack_copy_2(2, save = True)
-stack_test2()
+#stack_test2()
+#stack_copy(0, save = True)
+
+#Squish along Z-axis
+"""
+stack()
+"""
+
+#Squish along X-axis
+stack_x()
+
 
 

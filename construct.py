@@ -98,12 +98,8 @@ def insert_blank_mask(mask_id, to_dir, shape = None):
 def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False):
 	x_shape = blank.shape[1]
 	y_shape = blank.shape[2]
-	x_pos = random.randint(20, x_shape - 20)
-	y_pos = random.randint(20, y_shape - 20)
-	##
-	x_pos = 50
-	y_pos = 50
-	##
+	x_pos = random.randint(20, x_shape - mask.shape[1])
+	y_pos = random.randint(20, y_shape - mask.shape[2])
 	m = Image.fromarray(np.uint8(mask))
 	end = []
 	i = 1
