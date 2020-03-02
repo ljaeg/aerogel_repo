@@ -49,14 +49,12 @@ def stack_dataset(arr):
 		stacked_arr = []
 		for mov in arr:
 			stacked_arr.append(stack(mov, direc))
+		stacked_arr = np.array(stacked_arr)
 		if direc == 0:
-			print("Done with stacking in Z-direction")
 			Z = stacked_arr
 		elif direc == 1:
-			print("Done with stacking in Y-direction")
 			Y = stacked_arr
 		elif direc == 2:
-			print("Done with stacking in X-direction")
 			X = stacked_arr
 	return Z, Y, X 
 
@@ -69,6 +67,7 @@ def do(from_path, to_path):
 		New_DF.create_dataset(name + "_Y", Y.shape, data = Y)
 		New_DF.create_dataset(name + "_X", X.shape, data = X)
 		New_DF.flush()
+		print("done with {}".format(name))
 
 do(dataset_file, save_file)
 
