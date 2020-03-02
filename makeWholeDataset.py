@@ -1,3 +1,7 @@
+"""
+For creating a new hdf5 file with the name DATAFILE_NAME, and filling it with the appropriate images.
+"""
+from datetime import datetime
 import construct
 import h5py
 import numpy as np 
@@ -13,14 +17,15 @@ import random
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
 datafile_name = "FOV100.hdf5"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
-max_per = None #If no max_per, make max_per = None
-last = 13 #This is the number of slices we keep in the movie
-size = (100, 100) #If full images, make size = None, else make it a tuple with your desired shape of the images. For example, size = (100, 100)
-min_number_in_trainYes = 600 #Make this 0 if you only want to do one loop thru the names list
+max_per = None # The max number of movies in a single dataset. If no max_per, make max_per = None
+last = 13 # This is the number of slices we keep in the movie.
+size = (100, 100) # If full-size images, make size = None, else make it a tuple with your desired shape of the images. For example, size = (100, 100)
+min_number_in_dataset = 600 # If not 0, then we will sample more than once to make the size of the datasets larger
 
 if max_per:
-	min_number_in_trainYes = 0
+	min_number_in_dataset = 0 #If you specify a max number, then make sure this is 0
 
+#Put everything all together.
 def make_hdf():
 	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", ttv_split = train_test_val, max_per = max_per)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
@@ -38,30 +43,34 @@ def make_hdf():
 	create_b(datafile, vn_codes, "ValNo", size = size)
 	print("Done with ValNo")
 
+	create_attrs(datafile)
+
 	datafile.close()
 
+#Create a dataset with movies with tracks.
 def create_t(datafile, codes, name, size = None):
 	arr = create_big_array_track(codes, size = size)
+	print("total number of movies in {}: {}".format(name, arr.shape[0]))
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
+#Create a dataset without tracks.
 def create_b(datafile, codes, name, size = None):
 	arr = create_big_array_blank(codes, size = size)
+	print("total number of movies in {}: {}".format(name, arr.shape[0]))
 	datafile.create_dataset(name, arr.shape, data = arr)
 	datafile.flush()
 
-def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max_per = None, shuffle = False):
+#Shuffle the codes and divide them throughout the 6 datasets.
+def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max_per = None):
 	names = [t[0] for t in os.walk(directory)][1:]
-	if shuffle:
-		np.random.shuffle(names)
 	trainYes = []
 	trainNo = []
 	testYes = []
 	testNo = []
 	valYes = []
 	valNo = []
-	length = len(names)
-	while len(trainYes) < min_number_in_trainYes:
+	while len(trainYes) < min_number_in_dataset:
 		np.random.shuffle(names)
 		i = 0
 		k = length * ttv_split["train"] * .5
@@ -88,20 +97,20 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max
 		while i < k:
 			valNo.append(names[i])
 			i += 1
-	print("TrainYes: ", len(trainYes))
-	print("TrainNo: ", len(trainNo))
-	print("TestYes: ", len(testYes))
-	print("TestNo: ", len(testNo))
-	print("ValYes: ", len(valYes))
-	print("ValNo: ", len(valNo))
-	print(length)
+	print("codes in TrainYes: ", len(trainYes))
+	print("codes in TrainNo: ", len(trainNo))
+	print("codes in TestYes: ", len(testYes))
+	print("codes in TestNo: ", len(testNo))
+	print("codes in ValYes: ", len(valYes))
+	print("codes in ValNo: ", len(valNo))
+	print("Total number of codes we have to pick from: ", len(names))
 	if max_per:
 		print("max per: {}".format(max_per))
 		return trainYes[:max_per], trainNo[:max_per], testYes[:max_per], testNo[:max_per], valYes[:max_per], valNo[:max_per]
 	else:
 		return trainYes, trainNo, testYes, testNo, valYes, valNo
 
-
+#Create an array of size N x LAST x SIZE[0] x SIZE[1] x 3 of blank movies
 def create_big_array_blank(code_list, size = None):
 	big_array = []
 	for path in code_list:
@@ -132,6 +141,7 @@ def create_big_array_blank(code_list, size = None):
 	big_array = np.array(big_array)
 	return big_array
 
+#Create an array of size N x LAST x SIZE[0] x SIZE[1] x 3 of movies with tracks
 def create_big_array_track(code_list, size = None):
 	big_array = []
 	for path in code_list:
@@ -146,9 +156,14 @@ def create_big_array_track(code_list, size = None):
 		big_array.append(arr)
 	return np.array(big_array)
 
+#Create a bunch of miscellaneous attributes for the datafile
+def create_attrs(datafile):
+	datafile.attrs["datetime"] = datetime.now()
+	datafile.attrs["size"] = size
+	datafile.attrs["depth"] = last
+	datafile.attrs["train/test/val"] = ttv_split
 
-#split_codes(os.path.join(save_dir, "blanks"))
-make_hdf()
+
 
 
 

@@ -1,4 +1,5 @@
 #this program is used to view tracks easily, given a certain amazon code
+#You can also forego this amazon code and just hardcode a path into the function LOAD_IN_IMS
 
 from PIL import Image 
 import numpy as np 

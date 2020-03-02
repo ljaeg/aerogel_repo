@@ -1,3 +1,8 @@
+"""
+This is used for loading a few images from a created datafile with the name DATAFILE_NAME,
+just to see if the creation of this dataset worked, for example.s
+"""
+
 import os
 import numpy as np 
 from PIL import Image
@@ -21,8 +26,8 @@ TrainNo = DF["TrainNo"]
 if not os.path.exists(SaveDir):
 	os.mkdir(SaveDir)
 
-num_ims = 7
-for_seed = 4673
+num_ims = 7 #Number of images (x2 for track and no track) to download
+for_seed = 4673 
 np.random.seed(for_seed)
 
 numIms1 = TrainYes.shape[0]

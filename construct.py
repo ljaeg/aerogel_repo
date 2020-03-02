@@ -16,10 +16,7 @@ to_id = "fm_16007_-49606"
 #Dir = "/Users/loganjaeger/Desktop/aerogel/"
 Dir = "/home/admin/Desktop/aerogel_repo/"
 
-
-#First thing is to match up the surfaces
-#Note that we're 1-indexing the images, so watch for index mistakes
-
+#Load in the movie from disk and calculate the index of the surface.
 def load_and_getDelSq(path_base):
 	i = 1
 	max_DelSq = 0
@@ -47,6 +44,7 @@ def load_and_getDelSq(path_base):
 	##
 	return arr, ind
 
+#Assign the correct starting indices for the track and the blank that match up the surfaces of the two.
 def assign_ij(difference):
 	if difference > 0:
 		return difference, 1
@@ -55,15 +53,16 @@ def assign_ij(difference):
 	elif difference < 0:
 		return 1, 1 - difference
 
-def get_subimages(big_arr, mask_shape):
+#Get a sub_movie of the shape SHAPE from a random spot in the movie represented by BIG_ARR.
+def get_subimages(big_arr, shape):
 	bas = big_arr.shape
 	if bas[1:] != (384, 512, 4):
 		print(bas)
-	x = np.random.randint(0, high = bas[1] - mask_shape[0])
-	y = np.random.randint(0, high = bas[2] - mask_shape[1])
-	return big_arr[:, x:x+mask_shape[0], y:y+mask_shape[1], :]
+	x = np.random.randint(0, high = bas[1] - shape[0])
+	y = np.random.randint(0, high = bas[2] - shape[1])
+	return big_arr[:, x:x+shape[0], y:y+shape[1], :]
 
-#shape = None signifies a full sized image
+# Load in the track, blank, and mask and put them all together 
 def insert(from_id, to_dir, shape = None):
 	track, track_surface = load_and_getDelSq(Dir + "/track ims/TRACK-" + from_id)
 	track_surface = id_to_surface[from_id]
@@ -74,14 +73,12 @@ def insert(from_id, to_dir, shape = None):
 	##
 	mask_path = Dir + "/track ims/TRACK-" + from_id + "/mask.tif"
 	mask = np.array(Image.open(mask_path))
-	# print(mask.shape)
-	# print(track.shape)
 	track, mask = augment(track, mask)
 	dif = track_surface - blank_surface
 	i, j = assign_ij(dif)
 	return paste_save(track, mask, blank, track_index = i, blank_index = j)
 
-
+# Per Andrew's suggestion, I'm putting blanks + masks into some negative images.
 def insert_blank_mask(mask_id, to_dir, shape = None):
 	#Note I'm using "blank" here where track would normally go, and "background" where blank might go
 	mask_path = Dir + "/track ims/TRACK-" + mask_id + "/mask.tif"
@@ -101,8 +98,7 @@ def insert_blank_mask(mask_id, to_dir, shape = None):
 	return paste_save(small_blank, mask, background, track_index = i, blank_index = j)
 
 
-	
-
+#Paste the track into the blank movie, and either save or return the resulting movie
 def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False):
 	x_shape = blank.shape[1]
 	y_shape = blank.shape[2]
@@ -131,6 +127,7 @@ def paste_save(track, mask, blank, track_index = 1, blank_index =1, save = False
 			break
 	return np.array(end)
 
+#Adjust the brightness of the track so that it matches that of the background, making it look more realistic.
 def adjust_brightness(im, background):
 	for i in range(3):
 		background_mean = int(np.mean(background[:, :, i]))
@@ -144,7 +141,7 @@ def adjust_brightness(im, background):
 			im[:, :, i] = np.where(im[:, :, i] + dif < 0, im[:, :, i], im[:, :, i] + dif)
 	return im
 
-
+#Augment each slice of the track and the mask in the same way.
 def augment(movie, mask):
 	#MOVIE is a 3d array that represents each slice of the movie stacked on top of each other
 	#first, transform every vertical slice
@@ -165,7 +162,7 @@ def augment(movie, mask):
 	return movie, mask
 
 
-id_to_surface = {}
+id_to_surface = {} #This maps each track id to its surface index, which I have determined.
 id_to_surface["fm_21850_13198.I1016_13apr10"] = 13
 id_to_surface["fm_-60712_-54519"] = 20
 id_to_surface["fm_-29015_12542"] = 7
