@@ -10,7 +10,7 @@ import os
 import h5py
 
 directory = "/home/admin/Desktop/aerogel_preprocess"
-dataset_file = os.path.join(directory, "FOV100")
+dataset_file = os.path.join(directory, "FOV100.hdf5")
 save_file = os.path.join(directory, "stacked_1.hdf5")
 
 #Do a whole stack in a given direction (0-->Z, 1-->Y, 2-->X, in which the given axis is the one that's collapsed)
