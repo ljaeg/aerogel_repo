@@ -93,8 +93,8 @@ testAnswers[len(TestYes_Z):] = 0
 TestGenerator = multi_img_generator(testZ, testX, testY, testAnswers, seed = 21)
 
 #For verbosity, I like to be able to see how it performs on positive samples and negative samples
-Pos_TestGen = multi_img_generator(TestYes_Z, TestYes_X, TestYes_Y, seed = 3)
-Neg_TestGen = multi_img_generator(TestNo_Z, TestNo_X, TestNo_Y, seed = 2)
+Pos_TestGen = multi_img_generator(TestYes_Z, TestYes_X, TestYes_Y, np.ones(len(TestYes_Y)), seed = 3)
+Neg_TestGen = multi_img_generator(TestNo_Z, TestNo_X, TestNo_Y, np.zeros(len(TestNo_Y)), seed = 2)
 
 
 #### NOW CREATE THE ACTUAL NETWORK ####
