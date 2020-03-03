@@ -100,7 +100,7 @@ Neg_TestGen = multi_img_generator(TestNo_Z, TestNo_X, TestNo_Y, np.zeros(len(Tes
 #### NOW CREATE THE ACTUAL NETWORK ####
 
 #the input and conv layers for images stacked in the Z-direction.
-visible_Z = Input(shape = (None, 100, 100, 3))
+visible_Z = Input(shape = (100, 100, 3))
 convZ_1 = Conv2D(64, kernel_size = (3, 3))(visible_Z)
 convZ_2 = Conv2D(32, kernel_size = (3, 3))(convZ_1)
 poolZ_1 = MaxPooling2D(pool_size = (2, 2))(convZ_2)
