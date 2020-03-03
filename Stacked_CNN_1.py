@@ -132,11 +132,10 @@ flat_Y = GlobalMaxPooling2D()(convY_3) #Flatten()(convY_3)
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
-dense_1 = Dense(128, activation = "relu", activity_regularizer = regularizers.l1(.01))(merge)
-dense_2 = Dense(64, activation = "relu", activity_regularizer = regularizers.l1(.01))(dense_1)
-dense_3 = Dense(64, activation = "relu", activity_regularizer = regularizers.l1(.01))(dense_2)
-dense_4 = Dense(32, activation = "relu", activity_regularizer = regularizers.l1(.01))(dense_3)
-output = Dense(1, activation = "sigmoid")(dense_4)
+dense_1 = Dense(128, activation = "relu", activity_regularizer = regularizers.l1(.005))(merge)
+dense_2 = Dense(64, activation = "relu", activity_regularizer = regularizers.l1(.005))(dense_1)
+dense_3 = Dense(64, activation = "relu", activity_regularizer = regularizers.l1(.005))(dense_2)
+output = Dense(1, activation = "sigmoid")(dense_3)
 
 #Create the model
 model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
