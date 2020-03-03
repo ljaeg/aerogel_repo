@@ -13,11 +13,12 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 from keras.models import Model, load_model 
 from keras.layers import Input 
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout
 from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
+from keras import regularizers
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
 h5_file = "stacked_1.hdf5"
@@ -131,10 +132,11 @@ flat_Y = GlobalMaxPooling2D()(convY_3) #Flatten()(convY_3)
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
-dense_1 = Dense(128, activation = "relu")(merge)
-dense_2 = Dense(64, activation = "relu")(dense_1)
-dense_3 = Dense(64, activation = "relu")(dense_2)
-output = Dense(1, activation = "sigmoid")(dense_3)
+dense_1 = Dense(128, activation = "relu", activity_regularizer = regularizers.l1(.01))(merge)
+dense_2 = Dense(64, activation = "relu", activity_regularizer = regularizers.l1(.01))(dense_1)
+dense_3 = Dense(64, activation = "relu", activity_regularizer = regularizers.l1(.01))(dense_2)
+dense_4 = Dense(32, activation = "relu", activity_regularizer = regularizers.l1(.01))(dense_3)
+output = Dense(1, activation = "sigmoid")(dense_4)
 
 #Create the model
 model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
@@ -164,9 +166,9 @@ high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5')
 low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
 
 def pred(model_name, model):
-	pos_preds = model.predict_generator(Pos_TestGen)
+	pos_preds = model.predict_generator(Pos_TestGen, steps = len(TestYes_Z))
 	pos_acc = np.count_nonzero(pos_preds == 1) / len(pos_preds)
-	neg_preds = model.predict_generator(Neg_TestGen)
+	neg_preds = model.predict_generator(Neg_TestGen, steps = len(TestNo_Y))
 	neg_acc = np.count_nonzero(neg_preds == 0) / len(neg_preds)
 	print("Performance of the model {} on positive testing samples is:".format(model_name))
 	print(pos_acc)
