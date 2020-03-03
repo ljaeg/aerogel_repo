@@ -102,14 +102,14 @@ Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200]
 
 #the input and conv layers for images stacked in the Z-direction.
 visible_Z = Input(shape = (100, 100, 3))
-convZ_1 = Conv2D(64, kernel_size = (3, 3))(visible_Z)
-convZ_2 = Conv2D(32, kernel_size = (3, 3))(convZ_1)
+convZ_1 = Conv2D(32, kernel_size = (3, 3))(visible_Z)
+convZ_2 = Conv2D(16, kernel_size = (3, 3))(convZ_1)
 poolZ_1 = MaxPooling2D(pool_size = (2, 2))(convZ_2)
-convZ_3 = Conv2D(32, kernel_size = (3, 3))(poolZ_1)
+convZ_3 = Conv2D(16, kernel_size = (3, 3))(poolZ_1)
 poolZ_2 = MaxPooling2D(pool_size = (2, 2))(convZ_3)
-convZ_4 = Conv2D(32, kernel_size = (3, 3))(poolZ_2)
+convZ_4 = Conv2D(16, kernel_size = (3, 3))(poolZ_2)
 poolZ_3 = MaxPooling2D(pool_size = (2, 2))(convZ_4)
-convZ_5 = Conv2D(32, kernel_size = (3, 3))(poolZ_3)
+convZ_5 = Conv2D(16, kernel_size = (3, 3))(poolZ_3)
 poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_5)
 
 #The input and conv layers for images stacked in the X-direction.
@@ -118,7 +118,7 @@ convX_1 = Conv2D(32, kernel_size = (3, 3))(visible_X)
 poolX_1 = MaxPooling2D(pool_size = (2, 2))(convX_1)
 convX_2 = Conv2D(16, kernel_size = (3, 3))(poolX_1)
 #poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
-convX_3 = Conv2D(16, kernel_size = (3, 3))(convX_2)
+convX_3 = Conv2D(8, kernel_size = (3, 3))(convX_2)
 
 #The input and conv layers for images stacked in the Y-direction.
 visible_Y = Input(shape = (13, 100, 3))
@@ -126,7 +126,7 @@ convY_1 = Conv2D(32, kernel_size = (3, 3))(visible_Y)
 poolY_1 = MaxPooling2D(pool_size = (2, 2))(convY_1)
 convY_2 = Conv2D(16, kernel_size = (3, 3))(poolY_1)
 #poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
-convY_3 = Conv2D(16, kernel_size = (3, 3))(convY_2)
+convY_3 = Conv2D(8, kernel_size = (3, 3))(convY_2)
 
 #Flatten and concatenate
 flat_Z = Flatten()(poolZ_4) #GlobalMaxPooling2D()(convZ_4)
@@ -139,11 +139,11 @@ dense_1 = Dense(256, activation = "relu")(merge)
 dropout_1 = Dropout(.2)(dense_1)
 dense_2 = Dense(128, activation = "relu")(dropout_1)
 dropout_2 = Dropout(.15)(dense_2)
-dense_3 = Dense(64, activation = "relu")(dropout_2)
+dense_3 = Dense(128, activation = "relu")(dropout_2)
 dropout_3 = Dropout(.1)(dense_3)
-dense_4 = Dense(64, activation = "relu")(dropout_3)
-dropout_4 = Dropout(.1)(dense_4)
-output = Dense(1, activation = "sigmoid")(dropout_4)
+# dense_4 = Dense(64, activation = "relu")(dropout_3)
+# dropout_4 = Dropout(.1)(dense_4)
+output = Dense(1, activation = "sigmoid")(dropout_3)
 
 #Create the model
 model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
