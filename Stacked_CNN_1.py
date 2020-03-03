@@ -133,12 +133,14 @@ merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
 dense_1 = Dense(128, activation = "relu")(merge)
-dropout_1 = Dropout(.17)(dense_1)
+dropout_1 = Dropout(.2)(dense_1)
 dense_2 = Dense(128, activation = "relu")(dropout_1)
-dropout_2 = Dropout(.17)(dense_2)
+dropout_2 = Dropout(.15)(dense_2)
 dense_3 = Dense(64, activation = "relu")(dropout_2)
-dropout_3 = Dropout(.17)(dense_3)
-output = Dense(1, activation = "sigmoid")(dropout_3)
+dropout_3 = Dropout(.1)(dense_3)
+dense_4 = Dense(64, activation = "relu")(dropout_3)
+dropout_4 = Dropout(.1)(dense_4)
+output = Dense(1, activation = "sigmoid")(dropout_4)
 
 #Create the model
 model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
