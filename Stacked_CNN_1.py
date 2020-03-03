@@ -133,11 +133,11 @@ merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
 dense_1 = Dense(128, activation = "relu")(merge)
-dropout_1 = Dropout(.25)(dense_1)
+dropout_1 = Dropout(.2)(dense_1)
 dense_2 = Dense(64, activation = "relu")(dropout_1)
-dropout_2 = Dropout(.25)(dense_2)
+dropout_2 = Dropout(.2)(dense_2)
 dense_3 = Dense(64, activation = "relu")(dropout_2)
-dropout_3 = Dropout(.25)(dense_3)
+dropout_3 = Dropout(.2)(dense_3)
 output = Dense(1, activation = "sigmoid")(dropout_3)
 
 #Create the model
@@ -168,9 +168,9 @@ high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5')
 low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
 
 def pred(model_name, model):
-	pos_preds = model.predict_generator(Pos_TestGen, steps = len(TestYes_Z))
+	pos_preds = model.predict_generator(Pos_TestGen, steps = len(TestYes_Z), verbose = 1)
 	pos_acc = np.count_nonzero(pos_preds == 1) / len(pos_preds)
-	neg_preds = model.predict_generator(Neg_TestGen, steps = len(TestNo_Y))
+	neg_preds = model.predict_generator(Neg_TestGen, steps = len(TestNo_Y), verbose = 1)
 	neg_acc = np.count_nonzero(neg_preds == 0) / len(neg_preds)
 	print("Performance of the model {} on positive testing samples is:".format(model_name))
 	print(pos_acc)
