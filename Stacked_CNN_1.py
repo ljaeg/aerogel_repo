@@ -172,7 +172,7 @@ def pred(model_name, model):
 	pos_preds = np.round(pos_preds)
 	pos_acc = np.count_nonzero(pos_preds == 1) / len(pos_preds)
 	neg_preds = model.predict_generator(Neg_TestGen, steps = 200, verbose = 0)
-	neg_acc = np.round(neg_acc)
+	neg_acc = np.round(neg_preds)
 	neg_acc = np.count_nonzero(neg_preds == 0) / len(neg_preds)
 	print("Performance of the model {} on positive testing samples is:".format(model_name))
 	print(pos_acc)
