@@ -17,6 +17,7 @@ from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
 from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
+from keras.preprocessing.image import ImageDataGenerator
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
 h5_file = "stacked_1.hdf5"
