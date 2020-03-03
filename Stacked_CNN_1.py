@@ -94,8 +94,8 @@ testAnswers[len(TestYes_Z):] = 0
 TestGenerator = multi_img_generator(testZ, testX, testY, testAnswers, seed = 21)
 
 #For verbosity, I like to be able to see how it performs on positive samples and negative samples
-Pos_TestGen = multi_img_generator(TestYes_Z, TestYes_X, TestYes_Y, np.ones(len(TestYes_Y)), seed = 3)
-Neg_TestGen = multi_img_generator(TestNo_Z, TestNo_X, TestNo_Y, np.zeros(len(TestNo_Y)), seed = 2)
+Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
+Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200], np.zeros(200), seed = 2)
 
 
 #### NOW CREATE THE ACTUAL NETWORK ####
@@ -155,7 +155,7 @@ Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5',
 model.fit_generator(
 	generator = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
-	epochs = 30,
+	epochs = 10,
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
@@ -169,6 +169,7 @@ low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
 
 def pred(model_name, model):
 	pos_preds = model.predict_generator(Pos_TestGen, steps = len(TestYes_Z), verbose = 1)
+	print(pos_preds)
 	pos_acc = np.count_nonzero(pos_preds == 1) / len(pos_preds)
 	neg_preds = model.predict_generator(Neg_TestGen, steps = len(TestNo_Y), verbose = 1)
 	neg_acc = np.count_nonzero(neg_preds == 0) / len(neg_preds)
