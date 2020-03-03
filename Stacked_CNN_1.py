@@ -19,7 +19,7 @@ from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
-h5_file = "stacked_1.h5py"
+h5_file = "stacked_1.hdf5"
 datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
