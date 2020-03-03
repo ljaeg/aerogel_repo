@@ -13,7 +13,7 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 from keras.models import Model, load_model 
 from keras.layers import Input 
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D
 from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
@@ -125,9 +125,9 @@ convY_2 = Conv2D(16, kernel_size = (3, 3))(poolY_1)
 convY_3 = Conv2D(8, kernel_size = (3, 3))(convY_2)
 
 #Flatten and concatenate
-flat_Z = Flatten()(convZ_4)
-flat_X = Flatten()(convX_3)
-flat_Y = Flatten()(convY_3)
+flat_Z = GlobalMaxPooling2D()(convZ_4) #Flatten()(convZ_4)
+flat_X = GlobalMaxPooling2D()(convX_3) #Flatten()(convX_3)
+flat_Y = GlobalMaxPooling2D()(convY_3) #Flatten()(convY_3)
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
@@ -156,7 +156,7 @@ model.fit_generator(
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
 	callbacks = [Checkpoint_Acc, Checkpoint_Loss],
-	class_weights = class_weights
+	class_weight = class_weights
 	)
 
 #See performance on testing set
