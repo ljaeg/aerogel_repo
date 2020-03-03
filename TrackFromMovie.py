@@ -6,8 +6,8 @@ import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
 
-name ="fm_-15400_-8300"
-info = [(59, 126), (116, 146)]
+name ="fm_-15400_-8300" #the amazon code of the movie
+info = [(59, 126), (116, 146)] #The coordinates of the rectangle containing the track to cut out of the larger movie.
 x0 = info[1][0]
 x1 = info[1][1]
 y0 = info[0][0]
@@ -24,7 +24,7 @@ def load_in_ims(code, save_dir):
 			#print(img.shape)
 		except FileNotFoundError:
 			break
-		img = img[y0:y1, x0:x1, :]
+		img = img[y0:y1, x0:x1, :] #slicing movie so that we only get the part with the track
 		plt.imsave(save_dir + "/" + str(frame) + ".png", img)
 		frame += 1
 

@@ -6,7 +6,7 @@ import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
 
-name ="fm_-14165_18122"
+name ="fm_-14165_18122" #the amazon code of the movie
 info = [(50, 150), (0, 100)]
 x0 = info[1][0]
 x1 = info[1][1]
@@ -24,7 +24,7 @@ def load_in_ims(code, save_dir):
 			#print(img.shape)
 		except FileNotFoundError:
 			break
-		img = img[y0:y1, x0:x1, :]
+		img = img[y0:y1, x0:x1, :] #slicing movie so that we only get the part with the track
 		plt.imsave(save_dir + "/" + str(frame) + ".png", img)
 		frame += 1
 
