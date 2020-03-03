@@ -109,7 +109,7 @@ poolZ_2 = MaxPooling2D(pool_size = (2, 2))(convZ_3)
 convZ_4 = Conv2D(32, kernel_size = (3, 3))(poolZ_2)
 
 #The input and conv layers for images stacked in the X-direction.
-visible_X = Input(shape = (13, 100, 3))
+visible_X = Input(shape = (100, 13, 3))
 convX_1 = Conv2D(32, kernel_size = (3, 3))(visible_X)
 poolX_1 = MaxPooling2D(pool_size = (2, 2))(convX_1)
 convX_2 = Conv2D(16, kernel_size = (3, 3))(poolX_1)
