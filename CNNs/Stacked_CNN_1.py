@@ -1,5 +1,5 @@
 """
-This is the second iteration of a CNN to classify stacked images of aerogel with or without tracks. 
+This is the first iteration of a CNN to classify stacked images of aerogel with or without tracks. 
 We will be using the Keras Functional API, instead of the Sequential API, so that we can feed in multiple inputs.
 In this one, we'll just 
 """
@@ -13,7 +13,7 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 from keras.models import Model, load_model 
 from keras.layers import Input 
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout
 from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
@@ -102,56 +102,45 @@ Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200]
 
 #the input and conv layers for images stacked in the Z-direction.
 visible_Z = Input(shape = (100, 100, 3))
-convZ_1 = Conv2D(32, kernel_size = (3, 3))(visible_Z)
-spatial_d1 = SpatialDropout2D(.25)(convZ_1)
-convZ_2 = Conv2D(32, kernel_size = (3, 3))(spatial_d1)
-spatial_d2 = SpatialDropout2D(.25)(convZ_2)
-poolZ_1 = MaxPooling2D(pool_size = (2, 2))(spatial_d2)
-convZ_3 = Conv2D(16, kernel_size = (3, 3))(poolZ_1)
-spatial_d3 = SpatialDropout2D(.25)(convZ_3)
-poolZ_2 = MaxPooling2D(pool_size = (2, 2))(spatial_d3)
-convZ_4 = Conv2D(16, kernel_size = (3, 3))(poolZ_2)
-spatial_d4 = SpatialDropout2D(.25)(convZ_4)
-poolZ_3 = MaxPooling2D(pool_size = (2, 2))(spatial_d4)
-convZ_5 = Conv2D(16, kernel_size = (3, 3))(poolZ_3)
-poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_5)
+convZ_1 = Conv2D(64, kernel_size = (3, 3))(visible_Z)
+convZ_2 = Conv2D(32, kernel_size = (3, 3))(convZ_1)
+poolZ_1 = MaxPooling2D(pool_size = (2, 2))(convZ_2)
+convZ_3 = Conv2D(32, kernel_size = (3, 3))(poolZ_1)
+poolZ_2 = MaxPooling2D(pool_size = (2, 2))(convZ_3)
+convZ_4 = Conv2D(32, kernel_size = (3, 3))(poolZ_2)
 
 #The input and conv layers for images stacked in the X-direction.
 visible_X = Input(shape = (100, 13, 3))
 convX_1 = Conv2D(32, kernel_size = (3, 3))(visible_X)
 poolX_1 = MaxPooling2D(pool_size = (2, 2))(convX_1)
 convX_2 = Conv2D(16, kernel_size = (3, 3))(poolX_1)
-spatialX_1 = SpatialDropout2D(.25)(convX_2)
 #poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
-convX_3 = Conv2D(8, kernel_size = (3, 3))(spatialX_1)
-spatialX_2 = SpatialDropout2D(.25)(convX_3)
+convX_3 = Conv2D(8, kernel_size = (3, 3))(convX_2)
 
 #The input and conv layers for images stacked in the Y-direction.
 visible_Y = Input(shape = (13, 100, 3))
 convY_1 = Conv2D(32, kernel_size = (3, 3))(visible_Y)
 poolY_1 = MaxPooling2D(pool_size = (2, 2))(convY_1)
 convY_2 = Conv2D(16, kernel_size = (3, 3))(poolY_1)
-spatialY_1 = SpatialDropout2D(.25)(convY_2)
 #poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
-convY_3 = Conv2D(8, kernel_size = (3, 3))(spatialY_1)
-spatialY_2 = SpatialDropout2D(.25)(convY_3)
+convY_3 = Conv2D(8, kernel_size = (3, 3))(convY_2)
 
 #Flatten and concatenate
-flat_Z = Flatten()(poolZ_4) #GlobalMaxPooling2D()(convZ_4)
-flat_X = Flatten()(spatialX_2) #GlobalMaxPooling2D()(convX_3)
-flat_Y = Flatten()(spatialY_2) #GlobalMaxPooling2D()(convY_3)
+flat_Z = GlobalMaxPooling2D()(convZ_4) #Flatten()(convZ_4)
+flat_X = GlobalMaxPooling2D()(convX_3) #Flatten()(convX_3)
+flat_Y = GlobalMaxPooling2D()(convY_3) #Flatten()(convY_3)
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
-dense_1 = Dense(256, activation = "relu")(merge)
-dropout_1 = Dropout(.3)(dense_1)
+dense_1 = Dense(128, activation = "relu")(merge)
+dropout_1 = Dropout(.2)(dense_1)
 dense_2 = Dense(128, activation = "relu")(dropout_1)
-dropout_2 = Dropout(.25)(dense_2)
-dense_3 = Dense(128, activation = "relu")(dropout_2)
-dropout_3 = Dropout(.2)(dense_3)
-# dense_4 = Dense(64, activation = "relu")(dropout_3)
-# dropout_4 = Dropout(.1)(dense_4)
-output = Dense(1, activation = "sigmoid")(dropout_3)
+dropout_2 = Dropout(.15)(dense_2)
+dense_3 = Dense(64, activation = "relu")(dropout_2)
+dropout_3 = Dropout(.1)(dense_3)
+dense_4 = Dense(64, activation = "relu")(dropout_3)
+dropout_4 = Dropout(.1)(dense_4)
+output = Dense(1, activation = "sigmoid")(dropout_4)
 
 #Create the model
 model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)

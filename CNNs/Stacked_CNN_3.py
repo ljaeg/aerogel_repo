@@ -1,7 +1,7 @@
 """
-This is the second iteration of a CNN to classify stacked images of aerogel with or without tracks. 
-We will be using the Keras Functional API, instead of the Sequential API, so that we can feed in multiple inputs.
-In this one, we'll just 
+This is the third iteration of a CNN to classify stacked images of aerogel with or without tracks. 
+We will now be using the Sequential API, instead of the functional API. I think this makes it easier to 
+Add and subtract layers.
 """
 
 import numpy as np 
@@ -26,6 +26,8 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
+dropout_rate = .25
+spatial_d_rate = .25
 
 #### FIRST, LOAD IN THE IMAGES ####
 DF = h5py.File(datafile_path, "r")
@@ -97,64 +99,58 @@ TestGenerator = multi_img_generator(testZ, testX, testY, testAnswers, seed = 21)
 Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
 Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200], np.zeros(200), seed = 2)
 
-
 #### NOW CREATE THE ACTUAL NETWORK ####
 
 #the input and conv layers for images stacked in the Z-direction.
-visible_Z = Input(shape = (100, 100, 3))
-convZ_1 = Conv2D(32, kernel_size = (3, 3))(visible_Z)
-spatial_d1 = SpatialDropout2D(.25)(convZ_1)
-convZ_2 = Conv2D(32, kernel_size = (3, 3))(spatial_d1)
-spatial_d2 = SpatialDropout2D(.25)(convZ_2)
-poolZ_1 = MaxPooling2D(pool_size = (2, 2))(spatial_d2)
-convZ_3 = Conv2D(16, kernel_size = (3, 3))(poolZ_1)
-spatial_d3 = SpatialDropout2D(.25)(convZ_3)
-poolZ_2 = MaxPooling2D(pool_size = (2, 2))(spatial_d3)
-convZ_4 = Conv2D(16, kernel_size = (3, 3))(poolZ_2)
-spatial_d4 = SpatialDropout2D(.25)(convZ_4)
-poolZ_3 = MaxPooling2D(pool_size = (2, 2))(spatial_d4)
-convZ_5 = Conv2D(16, kernel_size = (3, 3))(poolZ_3)
-poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_5)
+Zmodel = Sequential()
+Zmodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu", input_shape = (100, 100, 3)))
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
+Zmodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(Flatten())
 
-#The input and conv layers for images stacked in the X-direction.
-visible_X = Input(shape = (100, 13, 3))
-convX_1 = Conv2D(32, kernel_size = (3, 3))(visible_X)
-poolX_1 = MaxPooling2D(pool_size = (2, 2))(convX_1)
-convX_2 = Conv2D(16, kernel_size = (3, 3))(poolX_1)
-spatialX_1 = SpatialDropout2D(.25)(convX_2)
-#poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
-convX_3 = Conv2D(8, kernel_size = (3, 3))(spatialX_1)
-spatialX_2 = SpatialDropout2D(.25)(convX_3)
+#For the X-direction
+Xmodel = Sequential()
+Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu", input_shape = (100, 13, 3)))
+Xmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Xmodel.add(SpatialDropout2D(spatial_d_rate))
+Xmodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
+Xmodel.add(SpatialDropout2D(spatial_d_rate))
+Xmodel.add(Flatten())
 
-#The input and conv layers for images stacked in the Y-direction.
-visible_Y = Input(shape = (13, 100, 3))
-convY_1 = Conv2D(32, kernel_size = (3, 3))(visible_Y)
-poolY_1 = MaxPooling2D(pool_size = (2, 2))(convY_1)
-convY_2 = Conv2D(16, kernel_size = (3, 3))(poolY_1)
-spatialY_1 = SpatialDropout2D(.25)(convY_2)
-#poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
-convY_3 = Conv2D(8, kernel_size = (3, 3))(spatialY_1)
-spatialY_2 = SpatialDropout2D(.25)(convY_3)
+#For the Y-direction
+Ymodel = Sequential()
+Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu", input_shape = (13, 100, 3)))
+Ymodel.add(MaxPooling2D(pool_size = (2, 2)))
+Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Ymodel.add(SpatialDropout2D(spatial_d_rate))
+Ymodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
+Ymodel.add(SpatialDropout2D(spatial_d_rate))
+Ymodel.add(Flatten())
 
-#Flatten and concatenate
-flat_Z = Flatten()(poolZ_4) #GlobalMaxPooling2D()(convZ_4)
-flat_X = Flatten()(spatialX_2) #GlobalMaxPooling2D()(convX_3)
-flat_Y = Flatten()(spatialY_2) #GlobalMaxPooling2D()(convY_3)
-merge = concatenate([flat_Z, flat_X, flat_Y])
+#Concatenate and make synthesized model with interpretation phase
+model = Sequential()
+model.add(concatenate([Zmodel, Xmodel, Ymodel]))
+model.add(Dense(256, activation = "relu"))
+model.add(Dropout(dropout_rate))
+model.add(Dense(128, activation = "relu"))
+model.add(Dropout(dropout_rate))
+model.add(Dense(128, activation = "relu"))
+model.add(Dropout(dropout_rate))
+model.add(Dense(1, activation = "sigmoid"))
 
-#Interpretation Phase
-dense_1 = Dense(256, activation = "relu")(merge)
-dropout_1 = Dropout(.3)(dense_1)
-dense_2 = Dense(128, activation = "relu")(dropout_1)
-dropout_2 = Dropout(.25)(dense_2)
-dense_3 = Dense(128, activation = "relu")(dropout_2)
-dropout_3 = Dropout(.2)(dense_3)
-# dense_4 = Dense(64, activation = "relu")(dropout_3)
-# dropout_4 = Dropout(.1)(dense_4)
-output = Dense(1, activation = "sigmoid")(dropout_3)
-
-#Create the model
-model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
+# #Create the model
+# model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
 
 #Summarize the model
 model.summary()
@@ -163,8 +159,8 @@ model.summary()
 model.compile(optimizer=Nadam(lr=0.0002), loss='binary_crossentropy', metrics=['acc'])
 
 #train the model
-Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=1, save_best_only=True, monitor='val_loss')
-Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5', verbose=1, save_best_only=True, monitor='val_acc')
+Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_3.h5'., verbose=1, save_best_only=True, monitor='val_loss')
+Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100_3.h5', verbose=1, save_best_only=True, monitor='val_acc')
 model.fit_generator(
 	generator = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
@@ -177,8 +173,8 @@ model.fit_generator(
 	)
 
 #See performance on testing set
-high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5')
-low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
+high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100_3.h5')
+low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_3.h5')
 
 def pred(model_name, model):
 	pos_preds = model.predict_generator(Pos_TestGen, steps = 200, verbose = 0)
@@ -194,6 +190,10 @@ def pred(model_name, model):
 
 pred("HIGH ACC", high_acc)
 pred("LOW LOSS", low_loss)
+
+
+
+
 
 
 
