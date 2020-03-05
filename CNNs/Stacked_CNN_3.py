@@ -28,6 +28,8 @@ batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
 dropout_rate = .25
 spatial_d_rate = .25
+conv_scale = 64
+dense_scale = 256
 
 #### FIRST, LOAD IN THE IMAGES ####
 DF = h5py.File(datafile_path, "r")
@@ -103,18 +105,18 @@ Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200]
 
 #the input and conv layers for images stacked in the Z-direction.
 Zmodel = Sequential()
-Zmodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu", input_shape = (100, 100, 3)))
+Zmodel.add(Conv2D(conv_scale // 2, kernel_size = (3, 3), activation = "relu", input_shape = (100, 100, 3)))
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
-Zmodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu"))
-Zmodel.add(SpatialDropout2D(spatial_d_rate))
-Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu"))
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu"))
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3), activation = "relu"))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
 Zmodel.add(Flatten())
 
@@ -124,7 +126,7 @@ Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu", input_shape = (
 Xmodel.add(MaxPooling2D(pool_size = (2, 2)))
 Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
-Xmodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
+Xmodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
 Xmodel.add(Flatten())
 
@@ -134,20 +136,39 @@ Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu", input_shape = (
 Ymodel.add(MaxPooling2D(pool_size = (2, 2)))
 Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
-Ymodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
+Ymodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
 Ymodel.add(Flatten())
 
 #Concatenate and make synthesized model with interpretation phase
-model = Sequential()
-model.add(concatenate([Zmodel, Xmodel, Ymodel]))
-model.add(Dense(256, activation = "relu"))
-model.add(Dropout(dropout_rate))
-model.add(Dense(128, activation = "relu"))
-model.add(Dropout(dropout_rate))
-model.add(Dense(128, activation = "relu"))
-model.add(Dropout(dropout_rate))
-model.add(Dense(1, activation = "sigmoid"))
+# model = Sequential()
+# model.add(concatenate([Zmodel, Xmodel, Ymodel]))
+# model.add(Dense(256, activation = "relu"))
+# model.add(Dropout(dropout_rate))
+# model.add(Dense(128, activation = "relu"))
+# model.add(Dropout(dropout_rate))
+# model.add(Dense(128, activation = "relu"))
+# model.add(Dropout(dropout_rate))
+# model.add(Dense(1, activation = "sigmoid"))
+
+#Use the defined sequential models to encode, then use functional API to combine.
+Z_input = Input(shape = (100, 100, 3))
+Z_encoded = Zmodel(Z_input)
+
+X_input = Input(shape = (100, 13, 3))
+X_encoded = Xmodel(X_input)
+
+Y_input = Input(shape = (13, 100, 3))
+Y_encoded = Ymodel(Y_input)
+
+merged = concatenate([Z_encoded, X_encoded, Y_encoded])
+dense1 = Dense(dense_scale, activation = "relu")(merged)
+dropout1 = Dropout(dropout_rate)(dense1)
+dense2 = Dense(dense_scale, activation = "relu")(dropout1)
+dropout2 = Dropout(dropout_rate)(dense2)
+dense3 = Dense(dense_scale // 2, activation = "relu")(dropout2)
+dropout3 = Dropout(dropout_rate)(dense3)
+output = Dense(1, activation = "sigmoid")(dropout3)
 
 # #Create the model
 # model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
