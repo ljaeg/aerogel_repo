@@ -13,12 +13,13 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 from keras.models import Model, load_model, Sequential
 from keras.layers import Input 
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate, BatchNormalization
 #from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from keras import regularizers
+from keras.activations import relu 
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
 h5_file = "stacked_1.hdf5"
@@ -26,7 +27,7 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-dropout_rate = .25
+dropout_rate = .4
 spatial_d_rate = .25
 conv_scale = 64
 dense_scale = 256
@@ -105,20 +106,30 @@ Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200]
 
 #the input and conv layers for images stacked in the Z-direction.
 Zmodel = Sequential()
-Zmodel.add(Conv2D(conv_scale // 2, kernel_size = (3, 3), activation = "relu", input_shape = (100, 100, 3)))
+Zmodel.add(Conv2D(conv_scale // 2, kernel_size = (3, 3), input_shape = (100, 100, 3)))
+model.add(BatchNormalization())
+model.add(relu())
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
-Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu"))
-Zmodel.add(SpatialDropout2D(spatial_d_rate))
-Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu"))
-Zmodel.add(SpatialDropout2D(spatial_d_rate))
-Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3)))
+model.add(BatchNormalization())
+model.add(relu())
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3), activation = "relu"))
+Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3)))
+model.add(BatchNormalization())
+model.add(relu())
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(Flatten())
+Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
+model.add(BatchNormalization())
+model.add(relu())
+Zmodel.add(SpatialDropout2D(spatial_d_rate))
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
+model.add(BatchNormalization())
+model.add(relu())
+Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
+Zmodel.add(GlobalMaxPooling2D())
 
 #For the X-direction
 Xmodel = Sequential()
@@ -128,7 +139,7 @@ Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
 Xmodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
-Xmodel.add(Flatten())
+Xmodel.add(GlobalMaxPooling2D())
 
 #For the Y-direction
 Ymodel = Sequential()
@@ -138,7 +149,7 @@ Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
 Ymodel.add(Conv2D(32, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
-Ymodel.add(Flatten())
+Ymodel.add(GlobalMaxPooling2D())
 
 #Concatenate and make synthesized model with interpretation phase
 # model = Sequential()
@@ -162,12 +173,18 @@ Y_input = Input(shape = (13, 100, 3))
 Y_encoded = Ymodel(Y_input)
 
 merged = concatenate([Z_encoded, X_encoded, Y_encoded])
-dense1 = Dense(dense_scale, activation = "relu")(merged)
-dropout1 = Dropout(dropout_rate)(dense1)
+dense1 = Dense(dense_scale)(merged)
+bn1 = BatchNormalization()(dense1)
+relu1 = relu()(bn1)
+dropout1 = Dropout(dropout_rate)(relu1)
 dense2 = Dense(dense_scale, activation = "relu")(dropout1)
-dropout2 = Dropout(dropout_rate)(dense2)
+bn2 = BatchNormalization()(dense2)
+relu2 = relu()(bn2)
+dropout2 = Dropout(dropout_rate)(relu2)
 dense3 = Dense(dense_scale // 2, activation = "relu")(dropout2)
-dropout3 = Dropout(dropout_rate)(dense3)
+bn3 = BatchNormalization()(dense3)
+relu3 = relu()(bn3)
+dropout3 = Dropout(dropout_rate)(relu3)
 output = Dense(1, activation = "sigmoid")(dropout3)
 
 #Create the model
