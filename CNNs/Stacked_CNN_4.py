@@ -26,7 +26,7 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-dropout_rate = .1
+dropout_rate = .15
 spatial_d_rate = .1
 conv_scale = 64 // 2
 dense_scale = 256 // 2
@@ -147,6 +147,8 @@ model.add(GlobalMaxPooling2D())
 #Concatenate and make synthesized model with interpretation phase
 model.add(Dense(256, activation = "relu"))
 model.add(Dropout(dropout_rate))
+model.add(Dense(256, activation = "relu"))
+model.add(Dropout(dropout_rate))
 model.add(Dense(128, activation = "relu"))
 model.add(Dropout(dropout_rate))
 model.add(Dense(128, activation = "relu"))
@@ -154,14 +156,14 @@ model.add(Dropout(dropout_rate))
 model.add(Dense(1, activation = "sigmoid"))
 
 #compile the model
-model.compile(optimizer=Nadam(lr=0.0005), loss='binary_crossentropy', metrics=['acc'])
+model.compile(optimizer=Nadam(lr=0.0002), loss='binary_crossentropy', metrics=['acc'])
 
 #Summarize the model
 model.summary()
 
 #train the model
-Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_3.h5', verbose=1, save_best_only=True, monitor='val_loss')
-Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100_3.h5', verbose=1, save_best_only=True, monitor='val_acc')
+Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_4.h5', verbose=1, save_best_only=True, monitor='val_loss')
+Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100_4.h5', verbose=1, save_best_only=True, monitor='val_acc')
 model.fit_generator(
 	generator = TrZ,
 	steps_per_epoch = TrZ.n // batch_size,
