@@ -27,9 +27,9 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-dropout_rate = .2
-spatial_d_rate = .25
-conv_scale = 64
+dropout_rate = .15
+spatial_d_rate = .2
+conv_scale = 64 // 2
 dense_scale = 256 // 2
 
 #### FIRST, LOAD IN THE IMAGES ####
