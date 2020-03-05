@@ -13,13 +13,13 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 from keras.models import Model, load_model, Sequential
 from keras.layers import Input 
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate, BatchNormalization
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate, BatchNormalization, ReLU
 #from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from keras import regularizers
-from keras.activations import ReLU
+#from keras.activations import ReLU
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
 h5_file = "stacked_1.hdf5"
