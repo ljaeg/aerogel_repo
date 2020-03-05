@@ -76,31 +76,40 @@ def multi_img_generator(Z, X, Y, answers, seed = 7):
 
 #Do training set
 trainZ = np.concatenate((TrainYes_Z, TrainNo_Z), axis = 0)
-trainX = np.concatenate((TrainYes_X, TrainNo_X), axis = 0)
-trainY = np.concatenate((TrainYes_Y, TrainNo_Y), axis = 0)
+# trainX = np.concatenate((TrainYes_X, TrainNo_X), axis = 0)
+# trainY = np.concatenate((TrainYes_Y, TrainNo_Y), axis = 0)
 trainAnswers = np.ones(len(TrainYes_Z) + len(TrainNo_Z))
 trainAnswers[len(TrainYes_Z):] = 0
-TrainGenerator = multi_img_generator(trainZ, trainX, trainY, trainAnswers, seed = 13)
+# TrainGenerator = multi_img_generator(trainZ, trainX, trainY, trainAnswers, seed = 13)
+
+TrZ = generator.flow(trainZ, trainAnswers)
 
 #Do validation set
 valZ = np.concatenate((ValYes_Z, ValNo_Z), axis = 0)
-valX = np.concatenate((ValYes_X, ValNo_X), axis = 0)
-valY = np.concatenate((ValYes_Y, ValNo_Y), axis = 0)
+# valX = np.concatenate((ValYes_X, ValNo_X), axis = 0)
+# valY = np.concatenate((ValYes_Y, ValNo_Y), axis = 0)
 valAnswers = np.ones(len(ValYes_Z) + len(ValNo_Z))
 valAnswers[len(ValYes_Z):] = 0
-ValGenerator = multi_img_generator(valZ, valX, valY, valAnswers, seed = 192)
+# ValGenerator = multi_img_generator(valZ, valX, valY, valAnswers, seed = 192)
 
-#do testing set
-testZ = np.concatenate((TestYes_Z, TestNo_Z), axis = 0)
-testX = np.concatenate((TestYes_X, TestNo_X), axis = 0)
-testY = np.concatenate((TestYes_Y, TestNo_Y), axis = 0)
-testAnswers = np.ones(len(TestYes_Z) + len(TestNo_Z))
-testAnswers[len(TestYes_Z):] = 0
-TestGenerator = multi_img_generator(testZ, testX, testY, testAnswers, seed = 21)
+VaZ = generator.flow(valZ, valAnswers)
+
+# #do testing set
+# testZ = np.concatenate((TestYes_Z, TestNo_Z), axis = 0)
+# # testX = np.concatenate((TestYes_X, TestNo_X), axis = 0)
+# # testY = np.concatenate((TestYes_Y, TestNo_Y), axis = 0)
+# testAnswers = np.ones(len(TestYes_Z) + len(TestNo_Z))
+# testAnswers[len(TestYes_Z):] = 0
+# #TestGenerator = multi_img_generator(testZ, testX, testY, testAnswers, seed = 21)
+
+# teZ = generator.flow(testZ, testAnswers)
 
 #For verbosity, I like to be able to see how it performs on positive samples and negative samples
-Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
-Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200], np.zeros(200), seed = 2)
+# Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
+# Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200], np.zeros(200), seed = 2)
+
+Pos_TestGen = generator.flow(TestYes_Z, np.ones(len(TestYes_Z)))
+Neg_TestGen = generator.flow(TestNo_Z, np.zeros(len(TestNo_Z)))
 
 #### NOW CREATE THE ACTUAL NETWORK ####
 
