@@ -163,12 +163,12 @@ model.summary()
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_3.h5', verbose=1, save_best_only=True, monitor='val_loss')
 Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100_3.h5', verbose=1, save_best_only=True, monitor='val_acc')
 model.fit_generator(
-	generator = TrainGenerator,
-	steps_per_epoch = len(trainAnswers) // batch_size,
+	generator = TrZ,
+	steps_per_epoch = TrZ.n // batch_size,
 	epochs = 150,
 	verbose = 2,
-	validation_data = ValGenerator,
-	validation_steps = len(valAnswers) // batch_size,
+	validation_data = VaZ,
+	validation_steps = VaZ.n // batch_size,
 	callbacks = [Checkpoint_Acc, Checkpoint_Loss],
 	class_weight = class_weights
 	)
