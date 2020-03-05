@@ -27,10 +27,10 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-dropout_rate = .3
-spatial_d_rate = .2
+dropout_rate = .2
+spatial_d_rate = .25
 conv_scale = 64
-dense_scale = 256
+dense_scale = 256 // 2
 
 #### FIRST, LOAD IN THE IMAGES ####
 DF = h5py.File(datafile_path, "r")
@@ -133,9 +133,9 @@ Zmodel.add(GlobalMaxPooling2D())
 
 #For the X-direction
 Xmodel = Sequential()
-Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu", input_shape = (100, 13, 3)))
+Xmodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu", input_shape = (100, 13, 3)))
 Xmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Xmodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
 Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
@@ -143,9 +143,9 @@ Xmodel.add(GlobalMaxPooling2D())
 
 #For the Y-direction
 Ymodel = Sequential()
-Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu", input_shape = (13, 100, 3)))
+Ymodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu", input_shape = (13, 100, 3)))
 Ymodel.add(MaxPooling2D(pool_size = (2, 2)))
-Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
+Ymodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
 Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
@@ -174,15 +174,15 @@ Y_encoded = Ymodel(Y_input)
 
 merged = concatenate([Z_encoded, X_encoded, Y_encoded])
 dense1 = Dense(dense_scale)(merged)
-bn1 = BatchNormalization(momentum = .8)(dense1)
+bn1 = BatchNormalization(momentum = .95)(dense1)
 ReLU1 = ReLU()(bn1)
 dropout1 = Dropout(dropout_rate)(ReLU1)
 dense2 = Dense(dense_scale)(dropout1)
-bn2 = BatchNormalization(momentum = .8)(dense2)
+bn2 = BatchNormalization(momentum = .95)(dense2)
 ReLU2 = ReLU()(bn2)
 dropout2 = Dropout(dropout_rate)(ReLU2)
 dense3 = Dense(dense_scale // 2)(dropout2)
-bn3 = BatchNormalization(momentum = .8)(dense3)
+bn3 = BatchNormalization(momentum = .95)(dense3)
 ReLU3 = ReLU()(bn3)
 dropout3 = Dropout(dropout_rate)(ReLU3)
 output = Dense(1, activation = "sigmoid")(dropout3)
@@ -194,7 +194,7 @@ model = Model(inputs = [Z_input, X_input, Y_input], outputs = output)
 model.summary()
 
 #compile the model
-model.compile(optimizer=Nadam(lr=0.0002), loss='binary_crossentropy', metrics=['acc'])
+model.compile(optimizer=Nadam(lr=0.001), loss='binary_crossentropy', metrics=['acc'])
 
 #train the model
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_3.h5', verbose=1, save_best_only=True, monitor='val_loss')
