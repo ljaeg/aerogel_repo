@@ -13,7 +13,7 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 from keras.models import Model, load_model, Sequential
 from keras.layers import Input 
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate, BatchNormalization, ReLU
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate, BatchNormalization, ReLU, GlobalAveragePooling2D
 #from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
@@ -129,7 +129,7 @@ Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
 #Zmodel.add(BatchNormalization())
 Zmodel.add(ReLU())
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
-Zmodel.add(GlobalMaxPooling2D())
+Zmodel.add(GlobalAveragePooling2D())
 
 #For the X-direction
 Xmodel = Sequential()
@@ -139,7 +139,7 @@ Xmodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
 Xmodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Xmodel.add(SpatialDropout2D(spatial_d_rate))
-Xmodel.add(GlobalMaxPooling2D())
+Xmodel.add(GlobalAveragePooling2D())
 
 #For the Y-direction
 Ymodel = Sequential()
@@ -149,7 +149,7 @@ Ymodel.add(Conv2D(8, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
 Ymodel.add(Conv2D(16, kernel_size = (3, 3), activation = "relu"))
 Ymodel.add(SpatialDropout2D(spatial_d_rate))
-Ymodel.add(GlobalMaxPooling2D())
+Ymodel.add(GlobalAveragePooling2D())
 
 #Concatenate and make synthesized model with interpretation phase
 # model = Sequential()
