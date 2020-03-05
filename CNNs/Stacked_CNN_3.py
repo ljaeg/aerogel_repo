@@ -170,8 +170,8 @@ dense3 = Dense(dense_scale // 2, activation = "relu")(dropout2)
 dropout3 = Dropout(dropout_rate)(dense3)
 output = Dense(1, activation = "sigmoid")(dropout3)
 
-# #Create the model
-# model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
+#Create the model
+model = Model(inputs = [Z_input, X_input, Y_input], outputs = output)
 
 #Summarize the model
 model.summary()
