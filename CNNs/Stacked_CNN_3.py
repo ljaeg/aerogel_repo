@@ -27,8 +27,8 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-dropout_rate = .4
-spatial_d_rate = .25
+dropout_rate = .3
+spatial_d_rate = .2
 conv_scale = 64
 dense_scale = 256
 
@@ -174,15 +174,15 @@ Y_encoded = Ymodel(Y_input)
 
 merged = concatenate([Z_encoded, X_encoded, Y_encoded])
 dense1 = Dense(dense_scale)(merged)
-bn1 = BatchNormalization()(dense1)
+bn1 = BatchNormalization(momentum = .8)(dense1)
 ReLU1 = ReLU()(bn1)
 dropout1 = Dropout(dropout_rate)(ReLU1)
 dense2 = Dense(dense_scale)(dropout1)
-bn2 = BatchNormalization()(dense2)
+bn2 = BatchNormalization(momentum = .8)(dense2)
 ReLU2 = ReLU()(bn2)
 dropout2 = Dropout(dropout_rate)(ReLU2)
 dense3 = Dense(dense_scale // 2)(dropout2)
-bn3 = BatchNormalization()(dense3)
+bn3 = BatchNormalization(momentum = .8)(dense3)
 ReLU3 = ReLU()(bn3)
 dropout3 = Dropout(dropout_rate)(ReLU3)
 output = Dense(1, activation = "sigmoid")(dropout3)
