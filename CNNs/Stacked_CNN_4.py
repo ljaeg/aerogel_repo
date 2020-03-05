@@ -29,7 +29,7 @@ class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards 
 dropout_rate = .2
 spatial_d_rate = .15
 conv_scale = 64 // 2
-dense_scale = 256 // 2
+dense_scale = 256 
 
 #### FIRST, LOAD IN THE IMAGES ####
 DF = h5py.File(datafile_path, "r")
@@ -145,13 +145,14 @@ model.add(MaxPooling2D(pool_size = (2, 2)))
 model.add(Flatten())
 
 #Concatenate and make synthesized model with interpretation phase
-model.add(Dense(dense_scale, activation = "relu"))
+model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.00005)))
 model.add(Dropout(dropout_rate))
-model.add(Dense(dense_scale, activation = "relu"))
+model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.00005)))
 model.add(Dropout(dropout_rate))
-model.add(Dense(dense_scale, activation = "relu"))
+model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.00005)))
 model.add(Dropout(dropout_rate))
-model.add(Dense(dense_scale, activation = "relu"))
+model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.00005)))
+model.add()
 model.add(Dropout(dropout_rate))
 model.add(Dense(1, activation = "sigmoid"))
 
