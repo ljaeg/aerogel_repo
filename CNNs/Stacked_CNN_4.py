@@ -26,8 +26,8 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-dropout_rate = .15
-spatial_d_rate = .2
+dropout_rate = .1
+spatial_d_rate = .1
 conv_scale = 64 // 2
 dense_scale = 256 // 2
 
@@ -129,20 +129,20 @@ model.add(MaxPooling2D(pool_size = (2, 2)))
 model.add(Conv2D(conv_scale, kernel_size = (3, 3)))
 #model.add(BatchNormalization())
 model.add(ReLU())
-model.add(Conv2D(conv_scale, kernel_size = (3, 3)))
+model.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
 model.add(ReLU())
 model.add(SpatialDropout2D(spatial_d_rate))
 model.add(MaxPooling2D(pool_size = (2, 2)))
-model.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
+model.add(Conv2D(conv_scale * 4, kernel_size = (3, 3)))
 #model.add(BatchNormalization())
 model.add(ReLU())
 model.add(SpatialDropout2D(spatial_d_rate))
 model.add(MaxPooling2D(pool_size = (2, 2)))
-model.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
+model.add(Conv2D(conv_scale * 4, kernel_size = (3, 3)))
 #model.add(BatchNormalization())
 model.add(ReLU())
 model.add(MaxPooling2D(pool_size = (2, 2)))
-model.add(GlobalAveragePooling2D())
+model.add(GlobalMaxPooling2D())
 
 #Concatenate and make synthesized model with interpretation phase
 model.add(Dense(256, activation = "relu"))
