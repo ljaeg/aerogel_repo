@@ -19,7 +19,7 @@ from keras.optimizers import Nadam
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from keras import regularizers
-from keras.activations import relu 
+from keras.activations import ReLU
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
 h5_file = "stacked_1.hdf5"
@@ -108,26 +108,26 @@ Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200]
 Zmodel = Sequential()
 Zmodel.add(Conv2D(conv_scale // 2, kernel_size = (3, 3), input_shape = (100, 100, 3)))
 Zmodel.add(BatchNormalization())
-Zmodel.add(relu())
+Zmodel.add(ReLU())
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3)))
 Zmodel.add(BatchNormalization())
-Zmodel.add(relu())
+Zmodel.add(ReLU())
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
 Zmodel.add(Conv2D(conv_scale, kernel_size = (3, 3)))
 Zmodel.add(BatchNormalization())
-Zmodel.add(relu())
+Zmodel.add(ReLU())
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
 Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
 Zmodel.add(BatchNormalization())
-Zmodel.add(relu())
+Zmodel.add(ReLU())
 Zmodel.add(SpatialDropout2D(spatial_d_rate))
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
 Zmodel.add(Conv2D(conv_scale * 2, kernel_size = (3, 3)))
 Zmodel.add(BatchNormalization())
-Zmodel.add(relu())
+Zmodel.add(ReLU())
 Zmodel.add(MaxPooling2D(pool_size = (2, 2)))
 Zmodel.add(GlobalMaxPooling2D())
 
@@ -175,16 +175,16 @@ Y_encoded = Ymodel(Y_input)
 merged = concatenate([Z_encoded, X_encoded, Y_encoded])
 dense1 = Dense(dense_scale)(merged)
 bn1 = BatchNormalization()(dense1)
-relu1 = relu()(bn1)
-dropout1 = Dropout(dropout_rate)(relu1)
-dense2 = Dense(dense_scale, activation = "relu")(dropout1)
+ReLU1 = ReLU()(bn1)
+dropout1 = Dropout(dropout_rate)(ReLU1)
+dense2 = Dense(dense_scale)(dropout1)
 bn2 = BatchNormalization()(dense2)
-relu2 = relu()(bn2)
-dropout2 = Dropout(dropout_rate)(relu2)
-dense3 = Dense(dense_scale // 2, activation = "relu")(dropout2)
+ReLU2 = ReLU()(bn2)
+dropout2 = Dropout(dropout_rate)(ReLU2)
+dense3 = Dense(dense_scale // 2)(dropout2)
 bn3 = BatchNormalization()(dense3)
-relu3 = relu()(bn3)
-dropout3 = Dropout(dropout_rate)(relu3)
+ReLU3 = ReLU()(bn3)
+dropout3 = Dropout(dropout_rate)(ReLU3)
 output = Dense(1, activation = "sigmoid")(dropout3)
 
 #Create the model
