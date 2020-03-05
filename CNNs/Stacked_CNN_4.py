@@ -152,7 +152,6 @@ model.add(Dropout(dropout_rate))
 model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.00005)))
 model.add(Dropout(dropout_rate))
 model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.00005)))
-model.add()
 model.add(Dropout(dropout_rate))
 model.add(Dense(1, activation = "sigmoid"))
 
