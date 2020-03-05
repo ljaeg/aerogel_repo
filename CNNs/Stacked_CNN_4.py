@@ -71,7 +71,8 @@ def multi_img_generator(Z, X, Y, answers, seed = 7):
 		Zi, ans_i = genZ.next()
 		Xi = genX.next()
 		Yi = genY.next()
-		yield [Zi, Xi, Yi], ans_i
+		yield Zi, ans_i
+		#yield [Zi, Xi, Yi], ans_i
 
 #Do training set
 trainZ = np.concatenate((TrainYes_Z, TrainNo_Z), axis = 0)
