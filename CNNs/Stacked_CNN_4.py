@@ -15,7 +15,7 @@ from keras.layers import Input
 from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, concatenate, BatchNormalization, ReLU, GlobalAveragePooling2D
 #from keras.layers.merge import concatenate
 from keras.optimizers import Nadam
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.preprocessing.image import ImageDataGenerator
 from keras import regularizers
 #from keras.activations import ReLU
@@ -166,6 +166,8 @@ model.summary()
 #train the model
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100_4.h5', verbose=1, save_best_only=True, monitor='val_loss')
 Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100_4.h5', verbose=1, save_best_only=True, monitor='val_acc')
+from time import time
+TBLog = TensorBoard(log_dir = "/home/admin/Desktop/TB_Aerogel/March6/{}".format(round(time(), 5)))
 model.fit_generator(
 	generator = TrZ,
 	steps_per_epoch = TrZ.n // batch_size,
@@ -173,7 +175,7 @@ model.fit_generator(
 	verbose = 2,
 	validation_data = VaZ,
 	validation_steps = VaZ.n // batch_size,
-	callbacks = [Checkpoint_Acc, Checkpoint_Loss],
+	callbacks = [Checkpoint_Acc, Checkpoint_Loss, TBLog],
 	class_weight = class_weights
 	)
 
