@@ -145,7 +145,9 @@ model.add(MaxPooling2D(pool_size = (2, 2)))
 model.add(Flatten())
 
 #Concatenate and make synthesized model with interpretation phase
-model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001)))
+model.add(Dense(2 * dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001)))
+model.add(Dropout(dropout_rate))
+model.add(Dense(2 * dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001)))
 model.add(Dropout(dropout_rate))
 model.add(Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001)))
 model.add(Dropout(dropout_rate))
