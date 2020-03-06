@@ -15,8 +15,8 @@ import random
 
 
 save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "FOV100.hdf5"
-train_test_val = {"train":1/3, "test":1/3, "val":1/3}
+datafile_name = "FOV100_2.hdf5"
+train_test_val = {"train":2/3, "test":1/6, "val":1/6}
 max_per = None # The max number of movies in a single dataset. If no max_per, make max_per = None
 last = 13 # This is the number of slices we keep in the movie.
 size = (100, 100) # If full-size images, make size = None, else make it a tuple with your desired shape of the images. For example, size = (100, 100)
