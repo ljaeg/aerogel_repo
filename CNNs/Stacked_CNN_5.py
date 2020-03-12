@@ -172,7 +172,7 @@ Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5',
 model.fit_generator(
 	generator = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
-	epochs = 100,
+	epochs = 500,
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
