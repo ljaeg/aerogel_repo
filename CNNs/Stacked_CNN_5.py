@@ -147,7 +147,7 @@ flat_Y = GlobalMaxPooling2D()(spatialY_2) #Flatten()(spatialY_2)
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
-dense_1 = Dense(2*dense_scale, activation = "relu")(merge)
+dense_1 = Dense(dense_scale, activation = "relu")(merge)
 dropout_1 = Dropout(dropout_rate)(dense_1)
 dense_2 = Dense(dense_scale, activation = "relu")(dropout_1)
 dropout_2 = Dropout(dropout_rate)(dense_2)
