@@ -27,7 +27,7 @@ datafile_path = os.path.join(Dir, h5_file)
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
 conv_scale = 32
-dense_scale = 2 * 128
+dense_scale = 128
 dropout_rate = .2
 spatial_d_rate = .25
 
@@ -164,7 +164,7 @@ model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
 model.summary()
 
 #compile the model
-model.compile(optimizer=Nadam(lr=0.0002), loss='binary_crossentropy', metrics=['acc'])
+model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=['acc'])
 
 #train the model
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=1, save_best_only=True, monitor='val_loss')
