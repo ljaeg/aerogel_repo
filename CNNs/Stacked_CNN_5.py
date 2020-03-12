@@ -141,9 +141,9 @@ convY_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialY_1)
 spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_3)
 
 #Flatten and concatenate
-flat_Z = Flatten()(poolZ_4) #GlobalMaxPooling2D()(convZ_4)
-flat_X = Flatten()(spatialX_2) #GlobalMaxPooling2D()(convX_3)
-flat_Y = Flatten()(spatialY_2) #GlobalMaxPooling2D()(convY_3)
+flat_Z = GlobalMaxPooling2D()(poolZ_4) #Flatten()(poolZ_4) 
+flat_X = GlobalMaxPooling2D()(spatialX_2) #Flatten()(spatialX_2) 
+flat_Y = GlobalMaxPooling2D()(spatialY_2) #Flatten()(spatialY_2) 
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
