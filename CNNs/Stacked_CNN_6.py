@@ -14,7 +14,7 @@ import tensorflow as tf
 gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
 	tf.config.experimental.set_memory_growth(gpu, True)
-	
+
 from tensorflow.keras.models import Model, load_model 
 from tensorflow.keras.layers import Input 
 from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
@@ -171,8 +171,8 @@ model.summary()
 model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=['acc'])
 
 #train the model
-Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=1, save_best_only=True, monitor='val_loss')
-Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5', verbose=1, save_best_only=True, monitor='val_acc')
+Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=0, save_best_only=True, monitor='val_loss')
+Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5', verbose=0, save_best_only=True, monitor='val_acc')
 model.fit_generator(
 	generator = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
