@@ -11,7 +11,7 @@ import tensorflow as tf
 # config.gpu_options.allow_growth = True
 # session = tf.Session(config=config)
 print("##########")
-print(tf.config.experimental.list_physical_devices())
+print(tf.config.experimental.list_physical_devices("GPU"))
 print("##########")
 from tensorflow.keras.models import Model, load_model 
 from tensorflow.keras.layers import Input 
