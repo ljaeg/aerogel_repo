@@ -15,7 +15,7 @@ print(tf.config.experimental.list_physical_devices('GPU'))
 print("##########\n")
 from tensorflow.keras.models import Model, load_model 
 from tensorflow.keras.layers import Input 
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D, 
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
 from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.callbacks import ModelCheckpoint
