@@ -1,6 +1,6 @@
 """
 This is the 6th iteration of a CNN to classify stacked images of aerogel with or without tracks. 
-This comes from gen 5, but I'm going to try to switch to tensorflow 2.0/tf.keras
+This comes from gen 5, but I'm going to try to switch to tensorflow 2.0/tensorflow.keras
 """
 
 import numpy as np 
@@ -13,14 +13,14 @@ import tensorflow as tf
 print("##########\n")
 print(tf.config.experimental.list_physical_devices('GPU'))
 print("##########\n")
-from tf.keras.models import Model, load_model 
-from tf.keras.layers import Input 
-from tf.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
-from tf.keras.layers.merge import concatenate
-from tf.keras.optimizers import Nadam
-from tf.keras.callbacks import ModelCheckpoint
-from tf.keras.preprocessing.image import ImageDataGenerator
-from tf.keras import regularizers
+from tensorflow.keras.models import Model, load_model 
+from tensorflow.keras.layers import Input 
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
+from tensorflow.keras.layers.merge import concatenate
+from tensorflow.keras.optimizers import Nadam
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras import regularizers
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
 h5_file = "stacked_1.hdf5"
