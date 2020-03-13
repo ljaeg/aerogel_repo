@@ -122,22 +122,22 @@ poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_5)
 
 #The input and conv layers for images stacked in the X-direction.
 visible_X = Input(shape = (100, 13, 3))
-convX_1 = Conv2D(conv_scale, kernel_size = (3, 3))(visible_X)
+convX_1 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(visible_X)
 poolX_1 = MaxPooling2D(pool_size = (2, 2))(convX_1)
-convX_2 = Conv2D(conv_scale, kernel_size = (3, 3))(poolX_1)
+convX_2 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(poolX_1)
 spatialX_1 = SpatialDropout2D(spatial_d_rate)(convX_2)
 #poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
-convX_3 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(spatialX_1)
+convX_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialX_1)
 spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_3)
 
 #The input and conv layers for images stacked in the Y-direction.
 visible_Y = Input(shape = (13, 100, 3))
-convY_1 = Conv2D(conv_scale, kernel_size = (3, 3))(visible_Y)
+convY_1 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(visible_Y)
 poolY_1 = MaxPooling2D(pool_size = (2, 2))(convY_1)
-convY_2 = Conv2D(conv_scale, kernel_size = (3, 3))(poolY_1)
+convY_2 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(poolY_1)
 spatialY_1 = SpatialDropout2D(spatial_d_rate)(convY_2)
 #poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
-convY_3 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(spatialY_1)
+convY_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialY_1)
 spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_3)
 
 #Flatten and concatenate
@@ -147,11 +147,11 @@ flat_Y = GlobalMaxPooling2D()(spatialY_2) #Flatten()(spatialY_2)
 merge = concatenate([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
-dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(merge)
+dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0002))(merge)
 dropout_1 = Dropout(dropout_rate)(dense_1)
-dense_2 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_1)
+dense_2 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0002))(dropout_1)
 dropout_2 = Dropout(dropout_rate)(dense_2)
-dense_3 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_2)
+dense_3 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0002))(dropout_2)
 dropout_3 = Dropout(dropout_rate)(dense_3)
 # dense_4 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_3)
 # dropout_4 = Dropout(dropout_rate)(dense_4)
