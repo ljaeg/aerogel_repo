@@ -153,9 +153,9 @@ dense_2 = Dense(dense_scale, activation = "relu", kernel_regularizer = regulariz
 dropout_2 = Dropout(dropout_rate)(dense_2)
 dense_3 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_2)
 dropout_3 = Dropout(dropout_rate)(dense_3)
-dense_4 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_3)
-dropout_4 = Dropout(dropout_rate)(dense_4)
-output = Dense(1, activation = "sigmoid")(dropout_4)
+# dense_4 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_3)
+# dropout_4 = Dropout(dropout_rate)(dense_4)
+output = Dense(1, activation = "sigmoid")(dropout_3)
 
 #Create the model
 model = Model(inputs = [visible_Z, visible_X, visible_Y], outputs = output)
