@@ -10,9 +10,11 @@ import tensorflow as tf
 # config = tf.ConfigProto()
 # config.gpu_options.allow_growth = True
 # session = tf.Session(config=config)
-print("##########")
-print(tf.config.experimental.list_physical_devices("GPU"))
-print("##########")
+
+gpus = tf.config.experimental.list_physical_devices("GPU")
+for gpu in gpus:
+	tf.config.experimental.set_memory_growth(gpu, True)
+	
 from tensorflow.keras.models import Model, load_model 
 from tensorflow.keras.layers import Input 
 from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
