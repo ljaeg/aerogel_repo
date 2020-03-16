@@ -41,7 +41,7 @@ datafile_path = os.path.join(Dir, h5_file)
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
 conv_scale = 32
-dense_scale = 128 // 2
+dense_scale = 128 // 4
 dropout_rate = .25
 spatial_d_rate = .25
 
@@ -132,7 +132,8 @@ convZ_4 = Conv2D(conv_scale, kernel_size = (3, 3))(poolZ_2)
 spatial_d4 = SpatialDropout2D(spatial_d_rate)(convZ_4)
 poolZ_3 = MaxPooling2D(pool_size = (2, 2))(spatial_d4)
 convZ_5 = Conv2D(conv_scale, kernel_size = (3, 3))(poolZ_3)
-poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_5)
+convZ_6 =Conv2D(conv_scale, kernel_size = (3, 3))(convZ_5)
+poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_6)
 
 #The input and conv layers for images stacked in the X-direction.
 visible_X = Input(shape = (100, 13, 3))
@@ -142,7 +143,8 @@ convX_2 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(poolX_1)
 spatialX_1 = SpatialDropout2D(spatial_d_rate)(convX_2)
 #poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
 convX_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialX_1)
-spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_3)
+convX_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convX_3)
+spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_4)
 
 #The input and conv layers for images stacked in the Y-direction.
 visible_Y = Input(shape = (13, 100, 3))
@@ -152,7 +154,8 @@ convY_2 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(poolY_1)
 spatialY_1 = SpatialDropout2D(spatial_d_rate)(convY_2)
 #poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
 convY_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialY_1)
-spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_3)
+convY_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convY_3)
+spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_4)
 
 #Flatten and concatenate
 flat_Z = GlobalMaxPooling2D()(poolZ_4) #Flatten()(poolZ_4) 
