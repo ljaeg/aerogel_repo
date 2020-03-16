@@ -180,7 +180,7 @@ model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=[
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=1, save_best_only=True, monitor='val_loss')
 Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5', verbose=1, save_best_only=True, monitor='val_acc')
 from time import time
-TB = TensorBoard(log_dir = os.path.join(TB_dir, "Mar16", time()))
+TB = TensorBoard(log_dir = os.path.join(TB_dir, "Mar16", str(time())))
 
 #In tf-2, fit_generator is deprecated and fit now supports generators
 model.fit(
