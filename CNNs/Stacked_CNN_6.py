@@ -1,6 +1,11 @@
 """
 This is the 6th iteration of a CNN to classify stacked images of aerogel with or without tracks. 
 This comes from gen 5, but I'm going to try to switch to tensorflow 2.0/tensorflow.keras
+
+Hmmmmmm why is this one running much slower than CNN_5???? An epoch there is ~2s, while here it's ~6s.
+^Caveat: I updated to tf-2.1, and now it runs just as fast. However, every epoch throws an error:
+'Error occurred when finalizing GeneratorDataset iterator: Cancelled: Operation was cancelled'
+This error may be spurious, but it may reflect memory leak, and it's quite annoying.
 """
 
 import numpy as np 
@@ -30,7 +35,7 @@ datafile_path = os.path.join(Dir, h5_file)
 
 batch_size = 32
 class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards positives or negatives
-conv_scale = 32
+conv_scale = 32 // 2
 dense_scale = 128
 dropout_rate = .2
 spatial_d_rate = .25
@@ -177,7 +182,7 @@ model.fit_generator(
 	generator = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
 	epochs = 500,
-	verbose = 2,
+	verbose = 1,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
 	callbacks = [Checkpoint_Acc, Checkpoint_Loss],
