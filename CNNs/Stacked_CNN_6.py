@@ -25,11 +25,12 @@ from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
 from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.optimizers import Nadam
-from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import regularizers
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
+TB_dir = os.path.join(Dir, "TB")
 h5_file = "stacked_1.hdf5"
 datafile_path = os.path.join(Dir, h5_file)
 
@@ -178,6 +179,9 @@ model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=[
 #train the model
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=1, save_best_only=True, monitor='val_loss')
 Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5', verbose=1, save_best_only=True, monitor='val_acc')
+TB = TensorBoard(log_dir = os.path.join(TB_dir, "Mar16"))
+
+#In tf-2, fit_generator is deprecated and fit now supports generators
 model.fit(
 	x = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
@@ -185,7 +189,7 @@ model.fit(
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
-	callbacks = [Checkpoint_Acc, Checkpoint_Loss],
+	callbacks = [Checkpoint_Acc, Checkpoint_Loss, TB],
 	class_weight = class_weights
 	)
 
@@ -194,10 +198,10 @@ high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5')
 low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
 
 def pred(model_name, model):
-	pos_preds = model.predict_generator(Pos_TestGen, steps = 200, verbose = 0)
+	pos_preds = model.predict(Pos_TestGen, steps = 200, verbose = 0)
 	pos_preds = np.round(pos_preds)
 	pos_acc = np.count_nonzero(pos_preds == 1) / len(pos_preds)
-	neg_preds = model.predict_generator(Neg_TestGen, steps = 200, verbose = 0)
+	neg_preds = model.predict(Neg_TestGen, steps = 200, verbose = 0)
 	neg_preds = np.round(neg_preds)
 	neg_acc = np.count_nonzero(neg_preds == 0) / len(neg_preds)
 	print("Performance of the model {} on POSITIVE testing samples is: {}".format(model_name, pos_acc))
