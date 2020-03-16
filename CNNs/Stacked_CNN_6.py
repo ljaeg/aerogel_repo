@@ -178,7 +178,7 @@ model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=[
 #train the model
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5', verbose=1, save_best_only=True, monitor='val_loss')
 Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5', verbose=1, save_best_only=True, monitor='val_acc')
-model.fit_generator(
+model.fit(
 	generator = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
 	epochs = 500,
