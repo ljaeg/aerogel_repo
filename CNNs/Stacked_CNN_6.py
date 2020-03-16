@@ -6,6 +6,10 @@ Hmmmmmm why is this one running much slower than CNN_5???? An epoch there is ~2s
 ^Caveat: I updated to tf-2.1, and now it runs just as fast. However, every epoch throws an error:
 'Error occurred when finalizing GeneratorDataset iterator: Cancelled: Operation was cancelled'
 This error may be spurious, but it may reflect memory leak, and it's quite annoying.
+
+To run tensorboard cd into: ~/anaconda3/envs/aerogel_tf2/lib/python3.7/site-packages/tensorboard
+and run: python main.py --logdir={log}
+have to figure out a full fix to this^
 """
 
 import numpy as np 
@@ -186,7 +190,7 @@ TB = TensorBoard(log_dir = os.path.join(TB_dir, "Mar16", str(time())))
 model.fit(
 	x = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
-	epochs = 500,
+	epochs = 1200,
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
