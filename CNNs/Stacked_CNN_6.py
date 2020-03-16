@@ -8,7 +8,7 @@ Hmmmmmm why is this one running much slower than CNN_5???? An epoch there is ~2s
 This error may be spurious, but it may reflect memory leak, and it's quite annoying.
 
 To run tensorboard cd into: ~/anaconda3/envs/aerogel_tf2/lib/python3.7/site-packages/tensorboard
-and run: python main.py --logdir={log}
+and run: python main.py --logdir=/home/admin/Desktop/aerogel_preprocess/TB/Mar16/
 have to figure out a full fix to this^
 """
 
@@ -163,9 +163,9 @@ merge = Concatenate()([flat_Z, flat_X, flat_Y])
 #Interpretation Phase
 dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(merge)
 dropout_1 = Dropout(dropout_rate)(dense_1)
-dense_2 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(dropout_1)
+dense_2 = Dense(dense_scale // 2, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(dropout_1)
 dropout_2 = Dropout(dropout_rate)(dense_2)
-dense_3 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(dropout_2)
+dense_3 = Dense(dense_scale // 2, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(dropout_2)
 dropout_3 = Dropout(dropout_rate)(dense_3)
 # dense_4 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_3)
 # dropout_4 = Dropout(dropout_rate)(dense_4)
