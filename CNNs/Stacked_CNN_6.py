@@ -27,7 +27,7 @@ for gpu in gpus:
 from tensorflow.keras.models import Model, load_model 
 from tensorflow.keras.layers import Input 
 from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
-from tensorflow.keras.layers import Concatenate, Multiply, Average
+from tensorflow.keras.layers import Concatenate, Multiply, Average, Maximum
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -161,7 +161,7 @@ spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_3)
 flat_Z = GlobalMaxPooling2D()(poolZ_4) #Flatten()(poolZ_4) 
 flat_X = GlobalMaxPooling2D()(spatialX_2) #Flatten()(spatialX_2) 
 flat_Y = GlobalMaxPooling2D()(spatialY_2) #Flatten()(spatialY_2) 
-merge = Average()([flat_Z, flat_X, flat_Y]) #Concatenate()([flat_Z, flat_X, flat_Y])
+merge = Maximum()([flat_Z, flat_X, flat_Y]) #Concatenate()([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
 dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(merge)
