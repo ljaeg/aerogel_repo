@@ -27,7 +27,7 @@ for gpu in gpus:
 from tensorflow.keras.models import Model, load_model 
 from tensorflow.keras.layers import Input 
 from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, Dropout, SpatialDropout2D
-from tensorflow.keras.layers import Concatenate
+from tensorflow.keras.layers import Concatenate, Multiply
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -143,8 +143,8 @@ convX_2 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(poolX_1)
 spatialX_1 = SpatialDropout2D(spatial_d_rate)(convX_2)
 #poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
 convX_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialX_1)
-convX_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convX_3)
-spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_4)
+#convX_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convX_3)
+spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_3)
 
 #The input and conv layers for images stacked in the Y-direction.
 visible_Y = Input(shape = (13, 100, 3))
@@ -154,14 +154,14 @@ convY_2 = Conv2D(conv_scale // 2, kernel_size = (3, 3))(poolY_1)
 spatialY_1 = SpatialDropout2D(spatial_d_rate)(convY_2)
 #poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
 convY_3 = Conv2D(conv_scale, kernel_size = (3, 3))(spatialY_1)
-convY_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convY_3)
-spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_4)
+#convY_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convY_3)
+spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_3)
 
 #Flatten and concatenate
 flat_Z = GlobalMaxPooling2D()(poolZ_4) #Flatten()(poolZ_4) 
 flat_X = GlobalMaxPooling2D()(spatialX_2) #Flatten()(spatialX_2) 
 flat_Y = GlobalMaxPooling2D()(spatialY_2) #Flatten()(spatialY_2) 
-merge = Concatenate()([flat_Z, flat_X, flat_Y])
+merge = Multiply()([flat_Z, flat_X, flat_Y]) #Concatenate()([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
 dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .005, l2 = .01))(merge)

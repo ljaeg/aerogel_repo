@@ -2,6 +2,8 @@
 This is the 7th iteration of a CNN to classify stacked images of aerogel with or without tracks. 
 This comes from gen 6, using tensorflow 2.0/tensorflow.keras.
 I'm just seeing how much info the non-Z stacked directions contain.
+	Verdict: Pretty good actually. Val acc got up to .69 before overtraining-the same as when we included the Z-stacked ims. hmmmm...
+	Also, it still didn't overtrain too much!
 
 Hmmmmmm why is this one running much slower than CNN_5???? An epoch there is ~2s, while here it's ~6s.
 ^Caveat: I updated to tf-2.1, and now it runs just as fast. However, every epoch throws an error:
