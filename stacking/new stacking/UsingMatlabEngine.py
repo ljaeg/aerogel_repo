@@ -26,46 +26,24 @@ def renorm(img):
 	rn = rn * 255
 	rn = rn.astype(np.uint8)
 	return rn
+
 # t1 = time()
 # eng = mle.start_matlab()
+# im = eng.stack_all(path)
+# im = np.array(im)
+# eng.quit()
+# print("done")
 # t2 = time()
-# print("started the engine: {} seconds".format(t2 - t1))
+# print("total time: ", t2 - t1, " seconds")
 
-# movie = load_in_movie(path)
-# movie = ((movie - np.min(movie)) / (np.max(movie) - np.min(movie))) * 255
-# movie = movie.astype(np.uint8)
-# t3 = time()
-# print("loaded in movie: {} seconds".format(t3 - t2))
+# im = renorm(im)
+# img = Image.fromarray(im.astype(np.uint8))
+# img.show()
 
-# matlab_movie = matlab.uint8(movie.tolist())
-# #matlab_movie = movie.tolist()
-# #matlab_movie = eng.mat2cell(matlab_movie, 384, 512, 3, 45)
-# t4 = time()
-# print("converted to matlab: {} seconds".format(t4 - t3))
 
-# stacked = eng.fstack(matlab_movie)
-# t5 = time()
-# print("stacked!!! {} seconds".format(t5 - t4))
+directory = "/home/admin/Desktop/aerogel_preprocess"
+dataset_file = os.path.join(directory, "FOV100.hdf5")
+save_file = os.path.join(directory, "stacked_w_matlab.hdf5")
 
-# eng.exit()
-# print("exited the engine!")
-# t6 = time()
-# print("total time: {} seconds, {} minutes".format(t6 - t1, (t6 - t1) / 60))
-
-# stacked_arr = np.array(stacked).astype(np.uint8)
-# print(stacked_arr.shape)
-# im = Image.fromarray(stacked_arr)
-# im.show()
-
-t1 = time()
 eng = mle.start_matlab()
-im = eng.stack_all(path)
-im = np.array(im)
-eng.quit()
-print("done")
-t2 = time()
-print("total time: ", t2 - t1, " seconds")
-
-im = renorm(im)
-img = Image.fromarray(im.astype(np.uint8))
-img.show()
+eng.stack_hdf(dataset_file, save_file)
