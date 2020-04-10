@@ -14,20 +14,21 @@ import random
 #from skimage.exposure import match_histograms
 
 
-save_dir = "/home/admin/Desktop/aerogel_preprocess"
-datafile_name = "FOV100_2.hdf5"
+save_dir = "/Users/loganjaeger/Desktop/aerogel_preprocess/" #"/home/admin/Desktop/aerogel_preprocess"
+datafile_name = "FOV100.hdf5" #"FOV100_2.hdf5"
+blank_files = "/Users/loganjaeger/Desktop/aerogel_preprocess/blanks/"#"/home/admin/Desktop/aerogel_preprocess/blanks"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
-max_per = None # The max number of movies in a single dataset. If no max_per, make max_per = None
+max_per = 30 # The max number of movies in a single dataset. If no max_per, make max_per = None
 last = 13 # This is the number of slices we keep in the movie.
 size = (100, 100) # If full-size images, make size = None, else make it a tuple with your desired shape of the images. For example, size = (100, 100)
 min_number_in_dataset = 600 # If not 0, then we will sample more than once to make the size of the datasets larger
 
 if max_per:
-	min_number_in_dataset = 0 #If you specify a max number, then make sure this is 0
+	min_number_in_dataset = max_per + 1 #If you specify a max number, then make sure this is 0
 
 #Put everything all together.
 def make_hdf():
-	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes("/home/admin/Desktop/aerogel_preprocess/blanks", ttv_split = train_test_val, max_per = max_per)
+	ty_codes, tn_codes, tey_codes, ten_codes, vy_codes, vn_codes = split_codes(blank_files, ttv_split = train_test_val, max_per = max_per)
 	datafile = h5py.File(os.path.join(save_dir, datafile_name), "w")
 
 	create_t(datafile, ty_codes, "TrainYes", size = size)
@@ -70,6 +71,7 @@ def split_codes(directory, ttv_split = {"train":1/3, "test":1/3, "val":1/3}, max
 	testNo = []
 	valYes = []
 	valNo = []
+	length = len(names)
 	while len(trainYes) < min_number_in_dataset:
 		np.random.shuffle(names)
 		i = 0
@@ -158,13 +160,13 @@ def create_big_array_track(code_list, size = None):
 
 #Create a bunch of miscellaneous attributes for the datafile
 def create_attrs(datafile):
-	datafile.attrs["datetime"] = datetime.now()
+	datafile.attrs["datetime"] = str(datetime.now())
 	datafile.attrs["size"] = size
 	datafile.attrs["depth"] = last
-	datafile.attrs["train/test/val"] = ttv_split
+	#datafile.attrs["train/test/val"] = train_test_val
 
 
-
+make_hdf()
 
 
 

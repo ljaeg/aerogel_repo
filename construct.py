@@ -13,8 +13,8 @@ import testSurfaceFinders
 #from_id = "fm_21850_13198.I1016_13apr10"
 from_id = "fm_-60712_-54519"
 to_id = "fm_16007_-49606"
-#Dir = "/Users/loganjaeger/Desktop/aerogel/"
-Dir = "/home/admin/Desktop/aerogel_repo/"
+Dir = "/Users/loganjaeger/Desktop/aerogel/"
+#Dir = "/home/admin/Desktop/aerogel_repo/"
 
 #Load in the movie from disk and calculate the index of the surface.
 def load_and_getDelSq(path_base):
@@ -23,7 +23,8 @@ def load_and_getDelSq(path_base):
 	ind = 0
 	arr = []
 	while True:
-		from_path = path_base + "/" + str(i) + ".png"
+		from_path = os.path.join(path_base, str(i) + ".png")
+		# from_path = path_base + "/" + str(i) + ".png"
 		try:
 			img = plt.imread(from_path)
 			arr.append(img)

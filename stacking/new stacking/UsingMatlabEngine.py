@@ -1,11 +1,11 @@
 import matlab.engine as mle
-import matlab
+#import matlab
 import numpy as np 
 from PIL import Image
 import os
 from time import time
 
-path = "/Users/loganjaeger/Desktop/aerogel/track ims/fm_-60712_-54519/"
+path = "/../Desktop/aerogel/track ims/fm_-60712_-54519/"
 
 def load_in_movie(path):
 	big_arr = np.zeros((384, 512, 3, 45))
@@ -27,23 +27,11 @@ def renorm(img):
 	rn = rn.astype(np.uint8)
 	return rn
 
-# t1 = time()
-# eng = mle.start_matlab()
-# im = eng.stack_all(path)
-# im = np.array(im)
-# eng.quit()
-# print("done")
-# t2 = time()
-# print("total time: ", t2 - t1, " seconds")
-
-# im = renorm(im)
-# img = Image.fromarray(im.astype(np.uint8))
-# img.show()
-
-
-directory = "/home/admin/Desktop/aerogel_preprocess"
+directory = "~/Desktop/aerogel_preprocess"
 dataset_file = os.path.join(directory, "FOV100.hdf5")
 save_file = os.path.join(directory, "stacked_w_matlab.hdf5")
 
 eng = mle.start_matlab()
-eng.stack_hdf(dataset_file, save_file)
+eng.stack_hdf(dataset_file, save_file, nargout = 0)
+eng.quit()
+print('done')

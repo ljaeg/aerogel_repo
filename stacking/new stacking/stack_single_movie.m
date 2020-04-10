@@ -1,6 +1,6 @@
 function [Z, X, Y] = stack_single_movie(big_box)
 
-z, x, y, c = size(big_box)
+[z, x, y, c] = size(big_box);
 cstack1 = cell(z, 1);
 cstack2 = cell(x, 1);
 cstack3 = cell(y, 1);

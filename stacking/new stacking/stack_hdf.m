@@ -6,20 +6,25 @@ tic
 for ii=1:length(ttv)
 	for jj=1:length(yn)
 		ds = h5read(df_path, strcat('/', ttv{ii}, yn{jj}));
-		stacked_Z = cell(size(ds, 5), 1);
-		stacked_X = cell(size(ds, 5), 1);
-		stacked_Y = cell(size(ds, 5), 1);
-		for mm=1:size(ds, 5) %I believe it's 5 but double check
-			Z, X, Y = stack_single_movie(ds(:, :, :, :, mm));
-			stacked_Z{mm} = Z;
-			stacked_X{mm} = X;
-			stacked_Y{mm} = Y;
-		%then put the stacked stuff into an hdf5 file, change their classes if need be
-		stacked_Z = cell2mat(stacked_Z);
-		stacked_X = cell2mat(stacked_X);
-		stacked_Y = cell2mat(stacked_Y);
+		ds = ds(1:3, :, :, :, :);
+		ds = permute(ds, [5 4 2 3 1]);
+		data_size = size(ds)
+		stacked_Z = zeros(data_size([5 3 4 1])); %cell(size(ds, 1), 1);
+		stacked_X = zeros(data_size([5 2 4 1])); %cell(size(ds, 1), 1);
+		stacked_Y = zeros(data_size([5 2 3 1])); %cell(size(ds, 1), 1);
+		for mm=1:size(ds, 1) 
+			[Z, X, Y] = stack_single_movie(squeeze(ds(mm, :, :, :, :)));
+			Z = permute(Z, [3 1 2]);
+			X = permute(X, [3 1 2]);
+			Y = permute(Y, [3 1 2]);
+			stacked_Z(:, :, :, mm) = Z;
+			stacked_X(:, :, :, mm) = X;
+			stacked_Y(:, :, :, mm) = Y;
+		end
+		%then put the stacked stuff into an hdf5 file
 
 		%Z
+		size(stacked_Z)
 		h5create(save_path, strcat('/', ttv{ii}, yn{jj}, '_Z'), size(stacked_Z));
 		h5write(save_path, strcat('/', ttv{ii}, yn{jj}, '_Z'), stacked_Z);
 

@@ -11,8 +11,8 @@ import os
 
 #amazon_code = "fm_27707_-59216"
 #Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + amazon_code
-Dir = "/home/admin/Desktop/aerogel_preprocess/blanks/"
-txt_path_file = "/home/admin/Desktop/aerogel_repo/aerogel_codes.txt"
+Dir = "/Users/loganjaeger/Desktop/aerogel_preprocess/blanks/"
+txt_path_file = "/Users/loganjaeger/Desktop/aerogel/aerogel_codes.txt"
 
 #Get a single movie from the amazon server and store it locally. Helper function for make_a_bunch
 def make_one(amazon_code):
