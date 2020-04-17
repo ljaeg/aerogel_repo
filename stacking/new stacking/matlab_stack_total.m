@@ -1,4 +1,4 @@
-directory = "/~/Desktop/aerogel_preprocess"
+directory = "/~/Desktop/Logan/aerogel_preprocess"
 dataset_file = strcat(directory, "/", "FOV100.hdf5")
 save_file = strcat(directory, "/", "stacked_w_matlab.hdf5")
 
