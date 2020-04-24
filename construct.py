@@ -13,8 +13,14 @@ import testSurfaceFinders
 #from_id = "fm_21850_13198.I1016_13apr10"
 from_id = "fm_-60712_-54519"
 to_id = "fm_16007_-49606"
-Dir = "/Users/loganjaeger/Desktop/aerogel/"
+Dir = "/Desktop/aerogel_repo/"
 #Dir = "/home/admin/Desktop/aerogel_repo/"
+
+def get_str_from_number(n):
+	if n < 10:
+		return "00" + str(n)
+	else:
+		return "0" + str(n)
 
 #Load in the movie from disk and calculate the index of the surface.
 def load_and_getDelSq(path_base):
@@ -23,7 +29,7 @@ def load_and_getDelSq(path_base):
 	ind = 0
 	arr = []
 	while True:
-		from_path = os.path.join(path_base, str(i) + ".png")
+		from_path = os.path.join(path_base, path_base + "-" get_str_from_number(i) + ".jpg")
 		# from_path = path_base + "/" + str(i) + ".png"
 		try:
 			img = plt.imread(from_path)
@@ -154,7 +160,7 @@ def augment(movie, mask):
 	# 	movie[:, :, i, :] = datagen_zy.apply_transform(movie[:, :, i, :], z_transform)
 
 	#now transform every horizontal slice
-	datagen_xy = ImageDataGenerator(zoom_range = [.75, 1.1], rotation_range = 90, shear_range = 10, horizontal_flip = True, vertical_flip = True)
+	datagen_xy = ImageDataGenerator(zoom_range = [.6, 1], rotation_range = 90, shear_range = 12, horizontal_flip = True, vertical_flip = True)
 	xy_transform = datagen_xy.get_random_transform(movie.shape[1:3])
 	for i in range(movie.shape[0]):
 		movie[i, :, :, :] = datagen_xy.apply_transform(movie[i, :, :, :], xy_transform)

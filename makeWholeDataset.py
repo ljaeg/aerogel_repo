@@ -14,14 +14,14 @@ import random
 #from skimage.exposure import match_histograms
 
 
-save_dir = "/Users/loganjaeger/Desktop/aerogel_preprocess/" #"/home/admin/Desktop/aerogel_preprocess"
+save_dir = "/Desktop/aerogel_preprocess/" #"/home/admin/Desktop/aerogel_preprocess"
 datafile_name = "FOV100.hdf5" #"FOV100_2.hdf5"
-blank_files = "/Users/loganjaeger/Desktop/aerogel_preprocess/blanks/"#"/home/admin/Desktop/aerogel_preprocess/blanks"
+blank_files = "/aws_test"#"/home/admin/Desktop/aerogel_preprocess/blanks"
 train_test_val = {"train":1/3, "test":1/3, "val":1/3}
-max_per = 30 # The max number of movies in a single dataset. If no max_per, make max_per = None
-last = 13 # This is the number of slices we keep in the movie.
+max_per = None # The max number of movies in a single dataset. If no max_per, make max_per = None
+last = 14 # This is the number of slices we keep in the movie.
 size = (100, 100) # If full-size images, make size = None, else make it a tuple with your desired shape of the images. For example, size = (100, 100)
-min_number_in_dataset = 600 # If not 0, then we will sample more than once to make the size of the datasets larger
+min_number_in_dataset = 1000 # If not 0, then we will sample more than once to make the size of the datasets larger
 
 if max_per:
 	min_number_in_dataset = max_per + 1 #If you specify a max number, then make sure this is 0
