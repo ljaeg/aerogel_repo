@@ -22,6 +22,8 @@ def get_str_from_number(n):
 	else:
 		return "0" + str(n)
 
+get_str_from_number(10)
+
 #Load in the movie from disk and calculate the index of the surface.
 def load_and_getDelSq(path_base):
 	i = 1
@@ -29,7 +31,7 @@ def load_and_getDelSq(path_base):
 	ind = 0
 	arr = []
 	while True:
-		from_path = os.path.join(path_base, path_base + "-" get_str_from_number(i) + ".jpg")
+		from_path = os.path.join(path_base, path_base + "-" + get_str_from_number(i) + ".jpg")
 		# from_path = path_base + "/" + str(i) + ".png"
 		try:
 			img = plt.imread(from_path)
