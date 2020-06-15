@@ -47,7 +47,7 @@ def make_a_bunch(code_txt_file_path):
 	for code in f.read().splitlines():
 		make_one(code)
 		number += 1
-		print(number, flush=True, end = "\r")
+		print(" number completed: ", number, flush=True, end = "\r")
 		# if not number % 100:
 		# 	print(str(number) + "/20,000")
 	print('DONE!!!')
