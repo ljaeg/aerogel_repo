@@ -12,6 +12,7 @@ import os
 #amazon_code = "fm_27707_-59216"
 #Dir = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + amazon_code
 Dir = "/Users/loganjaeger/Desktop/aerogel_preprocess/blanks/"
+Dir = "/Users/loganjaeger/Desktop/aerogel_preprocess/calibrations/"
 txt_path_file = "/Users/loganjaeger/Desktop/aerogel/aerogel_codes.txt"
 
 #Get a single movie from the amazon server and store it locally. Helper function for make_a_bunch
@@ -49,5 +50,6 @@ def make_a_bunch(code_txt_file_path):
 		if not number % 100:
 			print(str(number) + "/20,000")
 
-
-make_a_bunch(txt_path_file)
+code = "fm_-7366_-82272"
+make_one(code)
+#make_a_bunch(txt_path_file)

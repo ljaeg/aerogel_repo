@@ -33,6 +33,7 @@ def make_hdf():
 
 	create_t(datafile, ty_codes, "TrainYes", size = size)
 	print("Done with TrainYes")
+	
 	create_b(datafile, tn_codes, "TrainNo", size = size)
 	print("Done with TrainNo")
 	create_t(datafile, tey_codes, "TestYes", size = size)
