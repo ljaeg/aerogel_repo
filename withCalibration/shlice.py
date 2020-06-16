@@ -83,6 +83,7 @@ def save_new_movie(code, sliced_movie):
 		os.mkdir(direc)
 	i = 1
 	for i in range(sliced_movie.shape[0]):
+		print(max(sliced_movie[i]))
 		plt.imsave(os.path.join(direc, str(i) + ".jpg"), sliced_movie[i])
 
 def rectangle_movie(code, movie, x, y):
