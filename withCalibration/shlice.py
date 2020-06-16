@@ -64,7 +64,8 @@ def load_movie(code):
 	return norm(X)
 
 def norm(movie):
-	movie = (movie - np.min(movie)) / (np.max(movie) - np.min(movie))
+	m = (movie - np.min(movie)) / (np.max(movie) - np.min(movie))
+	return m
 
 def slice_movie(code):
 	where_track = get_coords(code)
