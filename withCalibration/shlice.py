@@ -116,7 +116,8 @@ def do_all():
 	number_to_do = len(allcodes)
 	current_number = 0
 	t0 = time.time()
-	for code in allcodes:
+	for c in allcodes:
+		code = c[35:]
 		do_single(code)
 		current_number += 1
 		t1 = time.time()
