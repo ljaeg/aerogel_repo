@@ -10,7 +10,7 @@ image_size = (150, 150) #how big do you want the sliced image to be?
 original_size = (384, 512)
 
 csv = pd.read_csv('containsCoords.csv')
-print("length of csv: " + len(csv))
+print("length of csv: " + str(len(csv)))
 
 def get_coords(code):
 	sub = csv[csv.amazon_key == code]
