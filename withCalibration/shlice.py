@@ -13,8 +13,12 @@ csv = pd.read_csv('containsCoords.csv')
 
 def get_coords(code):
 	sub = csv[csv.amazon_key == code]
-	xc = sub.x_coord.item()
-	yc = sub.y_coord.item()
+	try:
+		xc = sub.x_coord.item()
+		yc = sub.y_coord.item()
+	except ValueError:
+		print(sub)
+		return 1 / 0
 	return xc, yc
 
 def determine_slice_placement(tpl):
