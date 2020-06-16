@@ -112,7 +112,7 @@ def time_left(current, total, time_elapsed):
 
 def do_all():
 	directory = os.path.join("..", "..", "aerogel_preprocess", "calAmazon")
-	allcodes = [x[0] for x in os.walk(directory)]
+	allcodes = [x[0] for x in os.walk(directory)][1:]
 	number_to_do = len(allcodes)
 	current_number = 0
 	t0 = time.time()
