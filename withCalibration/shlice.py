@@ -61,7 +61,10 @@ def load_movie(code):
 		except FileNotFoundError:
 			break
 	X = np.array(X)
-	return X
+	return norm(X)
+
+def norm(movie):
+	movie = (movie - np.min(movie)) / (np.max(movie) - np.min(movie))
 
 def slice_movie(code):
 	where_track = get_coords(code)
@@ -83,7 +86,6 @@ def save_new_movie(code, sliced_movie):
 		os.mkdir(direc)
 	i = 1
 	for i in range(sliced_movie.shape[0]):
-		print(np.max(sliced_movie[i]))
 		plt.imsave(os.path.join(direc, str(i) + ".jpg"), sliced_movie[i])
 
 def rectangle_movie(code, movie, x, y):
