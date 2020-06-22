@@ -1,5 +1,5 @@
 import numpy as np 
-import mahotas as mh 
+#import mahotas as mh 
 from PIL import Image, ImageFilter 
 import os
 from scipy.ndimage.filters import laplace
@@ -9,12 +9,15 @@ import h5py
 def load_in_movie(path):
 	#load in the movie from a given path
 	stack = []
-	for i in range(1, 40):
+	for i in range(1, 50):
 		if i < 10:
 			ns = str(i)
 		else:
 			ns = str(i)
-		img = Image.open(os.path.join(path, ns + '.jpg'))
+		try:
+			img = Image.open(os.path.join(path, ns + '.jpg'))
+		except FileNotFoundError:
+			break
 		img = np.array(img)
 		img = img.astype(np.float32)
 		img = img / 255
@@ -57,11 +60,11 @@ def stack_all_directions(image_dir):
 
 
 def create_hdf(img_path, save_dir):
-	f = h5py.File(save_dir)
+	f = h5py.File(save_dir, 'w')
 	Zs = []
 	Ys = []
 	Xs = []
-	for movie_path in [x[0] for x in os.walk(img_path)][0:]:
+	for movie_path in [x[0] for x in os.walk(img_path)][1:]:
 		Z, Y, X = stack_all_directions(movie_path)
 		Zs.append(Z)
 		Ys.append(Y)
@@ -75,6 +78,6 @@ def create_hdf(img_path, save_dir):
 	f.flush()
 
 img_path = '/home/admin/Desktop/aerogel_preprocess/sliced'
-save_path = '/home/admin/aerogel_preprocess/sliced-stacked'
+save_path = '/home/admin/Desktop/aerogel_preprocess/sliced-stacked/Yes.hdf5'
 create_hdf(img_path, save_path)
 
