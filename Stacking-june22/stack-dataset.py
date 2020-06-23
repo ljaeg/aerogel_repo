@@ -68,8 +68,8 @@ def create_hdf(img_path, save_dir):
 	for i, movie_path in enumerate(mps):
 		Z, Y, X = stack_all_directions(movie_path)
 		Zs.append(Z)
-		Ys.append(Y)
-		Xs.append(X)
+		Ys.append(Y[:30, :, :])
+		Xs.append(X[:, :30, :])
 		print(f' {round((i/len(mps)) * 100, 4)}% done', end = '\r', flush = True)
 	print("shape: ", [i.shape for i in Xs], " tt")
 	print(Ys[0].shape)
