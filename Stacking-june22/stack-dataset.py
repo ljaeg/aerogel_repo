@@ -65,15 +65,18 @@ def create_hdf(img_path, save_dir):
 	Ys = []
 	Xs = []
 	mps = [x[0] for x in os.walk(img_path)][1:] #note I'm only doing the first few.
+	small_movies = 0
 	for i, movie_path in enumerate(mps):
 		Z, Y, X = stack_all_directions(movie_path)
 		if Y.shape[0] < 30:
-			print("less than 30 frames deep ", Y.shape)
+			small_movies += 1
+			print(f"less than 30 frames deep, number: {small_movies}. Was {Y.shape[0]} frames deep")
 			continue
 		Zs.append(Z)
 		Ys.append(Y[:30, :, :])
 		Xs.append(X[:, :30, :])
 		print(f' {round((i/len(mps)) * 100, 4)}% done', end = '\r', flush = True)
+	print(f"we have a total of {len(Zs)} movies in our dataset.")
 	Zs = np.array(Zs)
 	Xs = np.array(Xs)
 	Ys = np.array(Ys)
