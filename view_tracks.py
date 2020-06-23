@@ -65,7 +65,9 @@ def load_in_ims(code):
 		#path = "/Users/loganjaeger/Desktop/aerogel/forTestingSurface/" + code + "/" + str(frame) + ".png"
 		#path = "/Users/loganjaeger/Desktop/aerogel/fromHDF/yes4/" + str(frame) + ".png"
 		#path = "/Users/loganjaeger/Desktop/aerogel/sobel/" + str(frame) + ".png"
+
 		path = "/Users/loganjaeger/Desktop/aerogel_preprocess/calibrations/" + code + "/" + str(frame) + ".png"
+		path = "/Users/loganjaeger/Desktop/aerogel_preprocess/calibrations/rectangular/" + str(frame) + ".png"
 		try:
 			img = plt.imread(path)
 			#print(img.shape)
