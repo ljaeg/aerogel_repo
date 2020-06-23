@@ -64,7 +64,7 @@ def create_hdf(img_path, save_dir):
 	Zs = []
 	Ys = []
 	Xs = []
-	mps = [x[0] for x in os.walk(img_path)][1:10] #note I'm only doing the first few.
+	mps = [x[0] for x in os.walk(img_path)][1:] #note I'm only doing the first few.
 	for i, movie_path in enumerate(mps):
 		Z, Y, X = stack_all_directions(movie_path)
 		if Y.shape[0] < 30:
