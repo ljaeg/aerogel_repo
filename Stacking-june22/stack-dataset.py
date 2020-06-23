@@ -72,6 +72,7 @@ def create_hdf(img_path, save_dir):
 		Xs.append(X)
 		print(f' {round((i/len(mps)) * 100, 4)}% done', end = '\r', flush = True)
 	print("shape: ", [i.shape for i in Xs], " tt")
+	print(Ys[0].shape)
 	print(Zs[0].shape)
 	Zs = np.array(Zs)
 	print(Zs.shape)
