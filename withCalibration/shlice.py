@@ -60,6 +60,8 @@ def load_movie(code):
 			frame += 1
 		except FileNotFoundError:
 			break
+	if len(X) == 0:
+		print(code)
 	X = np.array(X)
 	return norm(X)
 
