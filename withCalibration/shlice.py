@@ -68,8 +68,8 @@ def norm(movie):
 	return m
 
 def random_slice_placement():
-	y = np.random.randint(0, orig_movie[0])
-	x = np.random.randint(0, orig_movie[1])
+	y = np.random.randint(0, original_size[0])
+	x = np.random.randint(0, original_size[1])
 	xs = determine_coord(x, 1)
 	ys = determine_coord(y, 0)
 	return (xs, ys)
