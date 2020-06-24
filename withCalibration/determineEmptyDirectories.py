@@ -6,7 +6,7 @@ subdirs = os.listdir(path)
 hasStuff = 0
 noStuff = 0
 for subdir in subdirs:
-	if os.listdir(subdir):
+	if os.listdir(os.path.join(path, subdir)):
 		hasStuff += 1
 	else:
 		noStuff += 1
