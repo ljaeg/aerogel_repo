@@ -53,7 +53,7 @@ def load_movie(code):
 	X = []
 	frame = 1
 	while True:
-		path = os.path.join("..", "..", "aerogel_preprocess", "calAmazon", code, code + get_str_from_number(frame) + ".jpg")
+		path = os.path.join("..", "..", "aerogel_preprocess", "blankAmazon", code, code + get_str_from_number(frame) + ".jpg")
 		try:
 			img = plt.imread(path)
 			X.append(img)
@@ -67,9 +67,19 @@ def norm(movie):
 	m = (movie - np.min(movie)) / (np.max(movie) - np.min(movie))
 	return m
 
-def slice_movie(code):
-	where_track = get_coords(code)
-	xs, ys = determine_slice_placement(where_track)
+def random_slice_placement():
+	y = np.random.randint(0, orig_movie[0])
+	x = np.random.randint(0, orig_movie[1])
+	xs = determine_coord(x, 1)
+	ys = determine_coord(y, 0)
+	return (xs, ys)
+
+def slice_movie(code, with_coords = True):
+	if with_coords:
+		where_track = get_coords(code)
+		xs, ys = determine_slice_placement(where_track)
+	else:
+		xs, ys = random_slice_placement()
 	# print(xs)
 	# print(ys)
 	orig_movie = load_movie(code)
@@ -82,7 +92,7 @@ def slice_movie(code):
 	return sliced
 
 def save_new_movie(code, sliced_movie):
-	direc = os.path.join("..", "..", 'aerogel_preprocess', 'sliced', code)
+	direc = os.path.join("..", "..", 'aerogel_preprocess', 'sliced-blanks', code)
 	if not os.path.isdir(direc): 
 		os.mkdir(direc)
 	i = 1
@@ -105,8 +115,8 @@ def rectangle_movie(code, movie, x, y):
 		plt.savefig(f'rectangular/{i}.png')
 		plt.close()
 
-def do_single(code):
-	sm = slice_movie(code)
+def do_single(code, with_coords=True):
+	sm = slice_movie(code, with_coords = with_coords)
 	save_new_movie(code, sm)
 
 def time_left(current, total, time_elapsed):
@@ -115,11 +125,14 @@ def time_left(current, total, time_elapsed):
 	return n_left / pace
 
 def do_all():
-	directory = os.path.join("..", "..", "aerogel_preprocess", "calAmazon")
+	directory = os.path.join("..", "..", "aerogel_preprocess", "blankAmazon")
 	allcodes = [x[0] for x in os.walk(directory)][1:]
 	number_to_do = len(allcodes)
 	current_number = 0
 	t0 = time.time()
+	print(allcodes[0])
+	print(allcodes[0][35:])
+	"""
 	for c in allcodes:
 		code = c[35:]
 		do_single(code)
@@ -127,6 +140,7 @@ def do_all():
 		t1 = time.time()
 		t_left = time_left(current_number, number_to_do, (t1 - t0) / 60)
 		print(f' done: {current_number}/{number_to_do}. Time left: {t_left}', flush=True, end = '\r')
+	"""
 
 
 do_all()
