@@ -130,17 +130,13 @@ def do_all():
 	number_to_do = len(allcodes)
 	current_number = 0
 	t0 = time.time()
-	print(allcodes[0])
-	print(allcodes[0][37:])
-	"""
 	for c in allcodes:
-		code = c[35:]
-		do_single(code)
+		code = c[37:]
+		do_single(code, with_coords = False)
 		current_number += 1
 		t1 = time.time()
 		t_left = time_left(current_number, number_to_do, (t1 - t0) / 60)
 		print(f' done: {current_number}/{number_to_do}. Time left: {t_left}', flush=True, end = '\r')
-	"""
 
 
 do_all()
