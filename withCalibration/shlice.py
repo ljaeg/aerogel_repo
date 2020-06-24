@@ -131,7 +131,7 @@ def do_all():
 	current_number = 0
 	t0 = time.time()
 	print(allcodes[0])
-	print(allcodes[0][35:])
+	print(allcodes[0][37:])
 	"""
 	for c in allcodes:
 		code = c[35:]
