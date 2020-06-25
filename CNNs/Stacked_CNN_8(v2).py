@@ -71,8 +71,10 @@ def ttv_split(yes, no, split = [.33, .33, .33]):
 	length = min(len(yes), len(no))
 	yes = yes[:length]
 	no = no[:length]
-	Ytr, Yte, Yv = np.split(yes, [length * split[0], length * (split[0] + split[1])])
-	Ntr, Nte, Nv = np.split(no, [length * split[0], length * (split[0] + split[1])])
+	a = int(length * split[0])
+	b = int(length * (split[0] + split[1]))
+	Ytr, Yte, Yv = np.split(yes, [a, b])
+	Ntr, Nte, Nv = np.split(no, [a, b])
 	train = np.concatenate((Ytr, Ntr), axis= 0)
 	test = np.concatenate((Yte, Nte), axis=0)
 	val = np.concatenate((Yv, Nv), axis=0)
