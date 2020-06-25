@@ -214,7 +214,7 @@ TB = TensorBoard(log_dir = os.path.join(TB_dir, "Mar16", str(time())))
 model.fit(
 	x = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
-	epochs = 1200,
+	epochs = 70,
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
