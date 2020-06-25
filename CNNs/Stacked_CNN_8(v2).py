@@ -98,10 +98,10 @@ assert np.all(testAnswers1 == testAnswers) and np.all(trainAnswers1 == trainAnsw
 
 #This generator makes the images match up correspondingly.
 generator = ImageDataGenerator()
-def multi_img_generator(Z, X, Y, answers, seed = 7):
-	genZ = generator.flow(Z, answers, seed = seed)
-	genX = generator.flow(X, seed = seed)
-	genY = generator.flow(Y, seed = seed)
+def multi_img_generator(Z, X, Y, answers, seed = 7, shuffle = True):
+	genZ = generator.flow(Z, answers, seed = seed, shuffle = shuffle)
+	genX = generator.flow(X, seed = seed, shuffle = shuffle)
+	genY = generator.flow(Y, seed = seed, shuffle = shuffle)
 	while True:
 		Zi, ans_i = genZ.next()
 		Xi = genX.next()
@@ -130,11 +130,11 @@ ValGenerator = multi_img_generator(Zval, Xval, Yval, valAnswers, seed = 192)
 # testY = np.concatenate((TestYes_Y, TestNo_Y), axis = 0)
 # testAnswers = np.ones(len(TestYes_Z) + len(TestNo_Z))
 # testAnswers[len(TestYes_Z):] = 0
-TestGenerator = multi_img_generator(Ztest, Xtest, Ytest, testAnswers, seed = 21)
+TestGenerator = multi_img_generator(Ztest, Xtest, Ytest, testAnswers, seed = 21, shuffle = False)
 
 #For verbosity, I like to be able to see how it performs on positive samples and negative samples
-Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
-Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200], np.zeros(200), seed = 2)
+# Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
+# Neg_TestGen = multi_img_generator(TestNo_Z[:200], TestNo_X[:200], TestNo_Y[:200], np.zeros(200), seed = 2)
 
 
 #### NOW CREATE THE ACTUAL NETWORK ####
@@ -227,16 +227,31 @@ high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5')
 low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
 
 def pred(model_name, model):
-	pos_preds = model.predict(Pos_TestGen, steps = 200, verbose = 0)
-	pos_preds = np.round(pos_preds)
-	pos_acc = np.count_nonzero(pos_preds == 1) / len(pos_preds)
-	neg_preds = model.predict(Neg_TestGen, steps = 200, verbose = 0)
-	neg_preds = np.round(neg_preds)
-	neg_acc = np.count_nonzero(neg_preds == 0) / len(neg_preds)
+	preds = model.predict(TestGenerator)
+	neg_acc, pos_acc = pos_neg_accs(preds, testAnswers)
 	print("Performance of the model {} on POSITIVE testing samples is: {}".format(model_name, pos_acc))
 	print("Performance of the model {} on NEGATIVE testing samples is: {}".format(model_name, neg_acc))
 	print("total acc: {}".format(.5 * (pos_acc + neg_acc)))
 	print(" ")
+
+def pos_neg_accs(preds, actuals):
+	#return specificity, sensitivity
+	preds = np.round(preds)
+	tn = 0
+	tp = 0
+	fp = 0
+	fn = 0
+	for i, p in enumerate(preds):
+		if p == 0 and actuals[i] == 0:
+			tn += 1
+		elif p == 0 and actuals[i] == 1:
+			fn += 1
+		elif p == 1 and actuals[i] == 1:
+			tp += 1
+		elif p == 1 and actuals[i] == 0:
+			fp += 1
+	return tn / (fp + tn), tp / (fn + tp)
+
 
 pred("HIGH ACC", high_acc)
 pred("LOW LOSS", low_loss)
