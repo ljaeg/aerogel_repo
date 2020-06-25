@@ -85,7 +85,7 @@ def create_hdf(img_path, save_dir):
 	f.create_dataset('Stacked-Xs', Xs.shape, data=Xs)
 	f.flush()
 
-img_path = '/home/admin/Desktop/aerogel_preprocess/sliced'
-save_path = '/home/admin/Desktop/aerogel_preprocess/sliced-stacked/Yes.hdf5'
+img_path = '/home/admin/Desktop/aerogel_preprocess/sliced-blanks'
+save_path = '/home/admin/Desktop/aerogel_preprocess/sliced-stacked/No.hdf5'
 create_hdf(img_path, save_path)
 
