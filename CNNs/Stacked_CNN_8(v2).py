@@ -208,7 +208,7 @@ model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=[
 Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5', verbose=1, save_best_only=True, monitor='val_loss')
 Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV150x150x30.h5', verbose=1, save_best_only=True, monitor='val_acc')
 from time import time
-TB = TensorBoard(log_dir = os.path.join(TB_dir, "Mar16", str(time())))
+TB = TensorBoard(log_dir = os.path.join(TB_dir, "Jun25", str(time())))
 
 #In tf-2, fit_generator is deprecated and fit now supports generators
 model.fit(
@@ -223,8 +223,8 @@ model.fit(
 	)
 
 #See performance on testing set
-high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV100.h5')
-low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV100.h5')
+high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV150x150x30.h5')
+low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5')
 
 def pred(model_name, model):
 	preds = model.predict(TestGenerator)
@@ -242,6 +242,7 @@ def pos_neg_accs(preds, actuals):
 	fp = 0
 	fn = 0
 	for i, p in enumerate(preds):
+		print(f" predicting: {(i / len(actuals)) * 100} %", end = '\r', flush = True)
 		if p == 0 and actuals[i] == 0:
 			tn += 1
 		elif p == 0 and actuals[i] == 1:
