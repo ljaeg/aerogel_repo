@@ -130,7 +130,7 @@ ValGenerator = multi_img_generator(Zval, Xval, Yval, valAnswers, seed = 192)
 # testY = np.concatenate((TestYes_Y, TestNo_Y), axis = 0)
 # testAnswers = np.ones(len(TestYes_Z) + len(TestNo_Z))
 # testAnswers[len(TestYes_Z):] = 0
-TestGenerator = multi_img_generator(Ztest, Xtest, Ytest, testAnswers, seed = 21, shuffle = False)
+TestGenerator = multi_img_generator(Ztest[:100], Xtest[:100], Ytest[:100], testAnswers[:100], seed = 21, shuffle = False)
 
 #For verbosity, I like to be able to see how it performs on positive samples and negative samples
 # Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
