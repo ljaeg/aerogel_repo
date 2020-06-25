@@ -53,7 +53,12 @@ def stack_per_channel(movie):
 #Stack in all 3 directions and save each resulting image
 def stack_all_directions(image_dir):
 	movie = load_in_movie(image_dir)
-	Z = stack(movie, 0)
+	try:
+		Z = stack(movie, 0)
+	except ValueError as e:
+		print(image_dir)
+		print("movie: ", movie)
+		raise e
 	Y = stack(movie, 1)
 	X = stack(movie, 2)
 	return Z, Y, X
