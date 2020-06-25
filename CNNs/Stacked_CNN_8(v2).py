@@ -214,7 +214,7 @@ TB = TensorBoard(log_dir = os.path.join(TB_dir, "Jun25", str(time())))
 model.fit(
 	x = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
-	epochs = 70,
+	epochs = 5,
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
@@ -222,9 +222,12 @@ model.fit(
 	class_weight = class_weights
 	)
 
+print('done with fitting')
 #See performance on testing set
 high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV150x150x30.h5')
 low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5')
+
+print('loaded models')
 
 def pred(model_name, model):
 	preds = model.predict(TestGenerator)
@@ -253,8 +256,10 @@ def pos_neg_accs(preds, actuals):
 			fp += 1
 	return tn / (fp + tn), tp / (fn + tp)
 
+print('pre-prediction')
 
 pred("HIGH ACC", high_acc)
 pred("LOW LOSS", low_loss)
 
+print('post-prediction')
 
