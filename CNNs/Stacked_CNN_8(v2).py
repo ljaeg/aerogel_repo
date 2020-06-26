@@ -67,6 +67,8 @@ Zno = DFn['Stacked-Zs']
 Xno = DFn['Stacked-Xs']
 Yno = DFn['Stacked-Ys']
 
+print(f'max: {np.max(Zno)}, min: {np.min(Zno)}')
+
 def ttv_split(yes, no, split = [.33, .33, .33]):
 	length = min(len(yes), len(no))
 	yes = yes[:length]
@@ -230,12 +232,15 @@ low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5')
 print('loaded models')
 
 def pred(model_name, model):
-	preds = model.predict_generator(TestGenerator, verbose = 1)
+	preds = model.predict([Ztest[:10], Xtest[:10], Ytest[:10]], verbose = 1) #ok, gotta figure out what's going on with predict...
 	neg_acc, pos_acc = pos_neg_accs(preds, testAnswers)
 	print("Performance of the model {} on POSITIVE testing samples is: {}".format(model_name, pos_acc))
 	print("Performance of the model {} on NEGATIVE testing samples is: {}".format(model_name, neg_acc))
 	print("total acc: {}".format(.5 * (pos_acc + neg_acc)))
 	print(" ")
+
+def newPred(model, gen):
+
 
 def pos_neg_accs(preds, actuals):
 	#return specificity, sensitivity
