@@ -62,13 +62,13 @@ def norm(ims):
 DFy = h5py.File(dfp_yes, "r")
 DFn = h5py.File(dfp_no, "r")
 
-Zyes = norm(DFy['Stacked-Zs'])
-Xyes = norm(DFy['Stacked-Xs'])
-Yyes = norm(DFy['Stacked-Ys'])
+Zyes = norm(np.array(DFy['Stacked-Zs']))
+Xyes = norm(np.array(DFy['Stacked-Xs']))
+Yyes = norm(np.array(DFy['Stacked-Ys']))
 
-Zno = norm(DFn['Stacked-Zs'])
-Xno = norm(DFn['Stacked-Xs'])
-Yno = norm(DFn['Stacked-Ys'])
+Zno = norm(np.array(DFn['Stacked-Zs']))
+Xno = norm(np.array(DFn['Stacked-Xs']))
+Yno = norm(np.array(DFn['Stacked-Ys']))
 
 print(f'max: {np.max(Zno)}, min: {np.min(Zno)}')
 
