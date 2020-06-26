@@ -1,6 +1,6 @@
 """
-This is the 8th iteration of a CNN to classify stacked images of aerogel with or without tracks. 
-This comes from gen 6.
+This is the 9th iteration of a CNN to classify stacked images of aerogel with or without tracks. 
+This comes from gen 8, which was very successful but slightly overfit. Now I want to twiddle with the hyperparameters.
 This is used with the images from /aerogel_preprocess/sliced-stacked
 
 Hmmmmmm why is this one running much slower than CNN_5???? An epoch there is ~2s, while here it's ~6s.
@@ -53,7 +53,7 @@ trainTestValSplit = [.5, .25, .25] # [Train, Test, Val]
 conv_scale = 32
 dense_scale = 128
 dropout_rate = .3
-spatial_d_rate = .25
+spatial_d_rate = .3
 
 def norm(ims):
 	return ims / 255
@@ -194,7 +194,7 @@ dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regulariz
 dropout_1 = Dropout(dropout_rate)(dense_1)
 dense_2 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .00001, l2 = .00001))(dropout_1)
 dropout_2 = Dropout(dropout_rate)(dense_2)
-dense_3 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .00001, l2 = .00001))(dropout_2)
+dense_3 = Dense(dense_scale // 2, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .00001, l2 = .00001))(dropout_2)
 dropout_3 = Dropout(dropout_rate)(dense_3)
 # dense_4 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_3)
 # dropout_4 = Dropout(dropout_rate)(dense_4)
