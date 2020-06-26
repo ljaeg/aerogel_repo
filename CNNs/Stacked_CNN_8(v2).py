@@ -162,7 +162,7 @@ convZ_6 =Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(convZ_5)
 poolZ_4 = MaxPooling2D(pool_size = (2, 2))(convZ_6)
 
 #The input and conv layers for images stacked in the X-direction.
-visible_X = Input(shape = (150, 13, 3))
+visible_X = Input(shape = (150, 20, 3))
 convX_1 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(visible_X)
 poolX_1 = MaxPooling2D(pool_size = (2, 2))(convX_1)
 convX_2 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(poolX_1)
@@ -173,7 +173,7 @@ convX_3 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(spatialX
 spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_3)
 
 #The input and conv layers for images stacked in the Y-direction.
-visible_Y = Input(shape = (13, 150, 3))
+visible_Y = Input(shape = (20, 150, 3))
 convY_1 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(visible_Y)
 poolY_1 = MaxPooling2D(pool_size = (2, 2))(convY_1)
 convY_2 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(poolY_1)
