@@ -240,6 +240,7 @@ def pred(model_name, model):
 	print(" ")
 
 def newPred(model, gen):
+	return 0
 
 
 def pos_neg_accs(preds, actuals):
