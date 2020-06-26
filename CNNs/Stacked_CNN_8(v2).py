@@ -41,7 +41,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import regularizers
 
 Dir = "/home/admin/Desktop/aerogel_preprocess"
-TB_dir = os.path.join(Dir, "TB")
+TB_dir = os.path.join(".", "TB")
 h5_file_yes = "sliced-stacked/Yes.hdf5"
 h5_file_no = 'sliced-stacked/No.hdf5'
 dfp_yes = os.path.join(Dir, h5_file_yes)
@@ -63,12 +63,12 @@ DFy = h5py.File(dfp_yes, "r")
 DFn = h5py.File(dfp_no, "r")
 
 Zyes = norm(np.array(DFy['Stacked-Zs']))
-Xyes = norm(np.array(DFy['Stacked-Xs']))[:, :, -13:, :]
-Yyes = norm(np.array(DFy['Stacked-Ys']))[:, -13:, :, :]
+Xyes = norm(np.array(DFy['Stacked-Xs']))[:, :, -20:, :]
+Yyes = norm(np.array(DFy['Stacked-Ys']))[:, -20:, :, :]
 
 Zno = norm(np.array(DFn['Stacked-Zs']))
-Xno = norm(np.array(DFn['Stacked-Xs']))[:, :, -13:, :]
-Yno = norm(np.array(DFn['Stacked-Ys']))[:, -13:, :, :]
+Xno = norm(np.array(DFn['Stacked-Xs']))[:, :, -20:, :]
+Yno = norm(np.array(DFn['Stacked-Ys']))[:, -20:, :, :]
 
 print(f'max: {np.max(Zno)}, min: {np.min(Zno)}')
 
@@ -210,10 +210,10 @@ model.summary()
 model.compile(optimizer=Nadam(lr=0.00015), loss='binary_crossentropy', metrics=['acc'])
 
 #train the model
-Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5', verbose=1, save_best_only=True, monitor='val_loss')
-Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/Saved_CNNs/acc_FOV150x150x30.h5', verbose=1, save_best_only=True, monitor='val_acc')
+Checkpoint_Loss = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x20.h5', verbose=1, save_best_only=True, monitor='val_loss')
+Checkpoint_Acc = ModelCheckpoint('/home/admin/Desktop/aerogel_CNNs/acc_FOV150x150x20.h5', verbose=1, save_best_only=True, monitor='val_acc')
 from time import time
-TB = TensorBoard(log_dir = os.path.join(TB_dir, "Jun25", str(time())))
+TB = TensorBoard(log_dir = os.path.join(TB_dir, "Jun26", str(time())))
 
 #In tf-2, fit_generator is deprecated and fit now supports generators
 model.fit(
@@ -228,8 +228,8 @@ model.fit(
 	)
 
 #See performance on testing set
-high_acc = load_model('/home/admin/Desktop/Saved_CNNs/acc_FOV150x150x30.h5')
-low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5')
+high_acc = load_model('/home/admin/Desktop/aerogel_CNNs/acc_FOV150x150x20.h5')
+low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x20.h5')
 
 def pred(model_name, model):
 	preds = model.predict([Ztest, Xtest, Ytest], verbose = 1) #ok, gotta figure out what's going on with predict...
