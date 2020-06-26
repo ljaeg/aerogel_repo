@@ -232,7 +232,7 @@ low_loss = load_model('/home/admin/Desktop/aerogel_CNNs/loss_FOV150x150x30.h5')
 print('loaded models')
 
 def pred(model_name, model):
-	preds = model.predict([Ztest[:10], Xtest[:10], Ytest[:10]], verbose = 1) #ok, gotta figure out what's going on with predict...
+	preds = model.predict([Ztest, Xtest, Ytest], verbose = 1) #ok, gotta figure out what's going on with predict...
 	neg_acc, pos_acc = pos_neg_accs(preds, testAnswers)
 	print("Performance of the model {} on POSITIVE testing samples is: {}".format(model_name, pos_acc))
 	print("Performance of the model {} on NEGATIVE testing samples is: {}".format(model_name, neg_acc))
