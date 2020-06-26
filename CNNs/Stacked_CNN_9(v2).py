@@ -52,7 +52,7 @@ class_weights = {0:1, 1:1} #Just in case you want to make the NN biased towards 
 trainTestValSplit = [.5, .25, .25] # [Train, Test, Val]
 conv_scale = 32
 dense_scale = 128
-dropout_rate = .3
+dropout_rate = .5
 spatial_d_rate = .3
 
 def norm(ims):
