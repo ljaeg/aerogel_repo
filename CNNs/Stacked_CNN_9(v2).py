@@ -135,7 +135,7 @@ ValGenerator = multi_img_generator(Zval, Xval, Yval, valAnswers, seed = 192)
 # testY = np.concatenate((TestYes_Y, TestNo_Y), axis = 0)
 # testAnswers = np.ones(len(TestYes_Z) + len(TestNo_Z))
 # testAnswers[len(TestYes_Z):] = 0
-TestGenerator = multi_img_generator(Ztest[:100], Xtest[:100], Ytest[:100], testAnswers[:100], seed = 21, shuffle = False)
+TestGenerator = multi_img_generator(Ztest, Xtest, Ytest, testAnswers, seed = 21, shuffle = False)
 
 #For verbosity, I like to be able to see how it performs on positive samples and negative samples
 # Pos_TestGen = multi_img_generator(TestYes_Z[:200], TestYes_X[:200], TestYes_Y[:200], np.ones(200), seed = 3)
@@ -169,8 +169,9 @@ convX_2 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(poolX_1)
 spatialX_1 = SpatialDropout2D(spatial_d_rate)(convX_2)
 #poolX_2 = MaxPooling2D(pool_size = (2, 2))(convX_2)
 convX_3 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(spatialX_1)
+convX_4 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(convX_3)
 #convX_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convX_3)
-spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_3)
+spatialX_2 = SpatialDropout2D(spatial_d_rate)(convX_4)
 
 #The input and conv layers for images stacked in the Y-direction.
 visible_Y = Input(shape = (20, 150, 3))
@@ -180,6 +181,7 @@ convY_2 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(poolY_1)
 spatialY_1 = SpatialDropout2D(spatial_d_rate)(convY_2)
 #poolY_2 = MaxPooling2D(pool_size = (2, 2))(convY_2)
 convY_3 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(spatialY_1)
+convY_4 = Conv2D(conv_scale, kernel_size = (3, 3), activation = "relu")(convY_3)
 #convY_4 = Conv2D(conv_scale, kernel_size = (3, 3))(convY_3)
 spatialY_2 = SpatialDropout2D(spatial_d_rate)(convY_3)
 
@@ -190,11 +192,11 @@ flat_Y = GlobalMaxPooling2D()(spatialY_2) #Flatten()(spatialY_2)
 merge = Concatenate()([flat_Z, flat_X, flat_Y])
 
 #Interpretation Phase
-dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .00001, l2 = .00001))(merge)
+dense_1 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .0001, l2 = .0001))(merge)
 dropout_1 = Dropout(dropout_rate)(dense_1)
-dense_2 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .00001, l2 = .00001))(dropout_1)
+dense_2 = Dense(dense_scale // 2, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .0001, l2 = .0001))(dropout_1)
 dropout_2 = Dropout(dropout_rate)(dense_2)
-dense_3 = Dense(dense_scale // 2, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .00001, l2 = .00001))(dropout_2)
+dense_3 = Dense(dense_scale // 2, activation = "relu", kernel_regularizer = regularizers.l1_l2(l1 = .0001, l2 = .0001))(dropout_2)
 dropout_3 = Dropout(dropout_rate)(dense_3)
 # dense_4 = Dense(dense_scale, activation = "relu", kernel_regularizer = regularizers.l2(.0001))(dropout_3)
 # dropout_4 = Dropout(dropout_rate)(dense_4)
@@ -219,7 +221,7 @@ TB = TensorBoard(log_dir = os.path.join(TB_dir, "Jun26", str(time())))
 model.fit(
 	x = TrainGenerator,
 	steps_per_epoch = len(trainAnswers) // batch_size,
-	epochs = 75,
+	epochs = 150,
 	verbose = 2,
 	validation_data = ValGenerator,
 	validation_steps = len(valAnswers) // batch_size,
